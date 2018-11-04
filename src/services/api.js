@@ -124,3 +124,11 @@ export async function queryNotices() {
 export async function getFakeCaptcha(mobile) {
   return request(`/api/captcha?mobile=${mobile}`);
 }
+
+// 管理员登陆
+export async function Login(params) {
+  return request('/api/login', {
+    method: 'POST',
+    body: params,
+  });
+}

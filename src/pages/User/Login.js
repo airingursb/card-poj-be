@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi/locale';
-import Link from 'umi/link';
-import { Checkbox, Alert, Icon } from 'antd';
+import { Checkbox, Alert } from 'antd';
 import Login from '@/components/Login';
 import styles from './Login.less';
 
-const { Tab, UserName, Password, Mobile, Captcha, Submit } = Login;
+const { Tab, UserName, Password, Submit } = Login;
 
 @connect(({ login, loading }) => ({
   login,
@@ -16,6 +15,7 @@ class LoginPage extends Component {
   state = {
     type: 'account',
     autoLogin: true,
+    alertStatus: false,
   };
 
   onTabChange = type => {
@@ -59,13 +59,19 @@ class LoginPage extends Component {
     });
   };
 
+  showAlert = () => {
+    this.setState({
+      alertStatus: true,
+    });
+  };
+
   renderMessage = content => (
     <Alert style={{ marginBottom: 24 }} message={content} type="error" showIcon />
   );
 
   render() {
     const { login, submitting } = this.props;
-    const { type, autoLogin } = this.state;
+    const { type, autoLogin, alertStatus } = this.state;
     return (
       <div className={styles.main}>
         <Login
@@ -81,41 +87,25 @@ class LoginPage extends Component {
               login.type === 'account' &&
               !submitting &&
               this.renderMessage(formatMessage({ id: 'app.login.message-invalid-credentials' }))}
-            <UserName name="userName" placeholder="admin/user" />
+            <UserName name="account" placeholder="管理员账号" />
             <Password
               name="password"
-              placeholder="888888/123456"
+              placeholder="管理员密码"
               onPressEnter={() => this.loginForm.validateFields(this.handleSubmit)}
             />
-          </Tab>
-          <Tab key="mobile" tab={formatMessage({ id: 'app.login.tab-login-mobile' })}>
-            {login.status === 'error' &&
-              login.type === 'mobile' &&
-              !submitting &&
-              this.renderMessage(formatMessage({ id: 'app.login.message-invalid-verification-code' }))}
-            <Mobile name="mobile" />
-            <Captcha name="captcha" countDown={120} onGetCaptcha={this.onGetCaptcha} />
           </Tab>
           <div>
             <Checkbox checked={autoLogin} onChange={this.changeAutoLogin}>
               <FormattedMessage id="app.login.remember-me" />
             </Checkbox>
-            <a style={{ float: 'right' }} href="">
-              <FormattedMessage id="app.login.forgot-password" />
+            <a style={{ float: 'right' }} onClick={this.showAlert}>
+              {alertStatus && this.renderMessage('请联系管理员找回密码')}
+              {!alertStatus && <FormattedMessage id="app.login.forgot-password" />}
             </a>
           </div>
           <Submit loading={submitting}>
             <FormattedMessage id="app.login.login" />
           </Submit>
-          <div className={styles.other}>
-            <FormattedMessage id="app.login.sign-in-with" />
-            <Icon type="alipay-circle" className={styles.icon} theme="outlined" />
-            <Icon type="taobao-circle" className={styles.icon} theme="outlined" />
-            <Icon type="weibo-circle" className={styles.icon} theme="outlined" />
-            <Link className={styles.register} to="/User/Register">
-              <FormattedMessage id="app.login.signup" />
-            </Link>
-          </div>
         </Login>
       </div>
     );
