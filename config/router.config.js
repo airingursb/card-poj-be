@@ -41,6 +41,79 @@ export default [
           },
         ],
       },
+      // 用户管理模块
+      { path: '/users', redirect: '/users/list' },
+      {
+        path: '/users',
+        name: 'users',
+        icon: 'user',
+        routes: [
+          {
+            path: '/users/list',
+            name: 'userlist',
+            component: './Users/Users',
+            routes: [
+              {
+                path: '/users/profile',
+                component: './Users/Profile',
+              },
+            ],
+          },
+          {
+            path: '/users/profile',
+            component: './Users/Profile',
+          },
+        ],
+      },
+      // 通知管理模块
+      {
+        path: '/messages',
+        name: 'messages',
+        icon: 'profile',
+        routes: [
+          {
+            path: '/messages/list',
+            name: 'messagelist',
+            component: './Dashboard/Analysis',
+          },
+          {
+            path: '/messages/publish',
+            name: 'publish',
+            component: './Dashboard/Analysis',
+          },
+        ],
+      },
+      // 任务管理模块
+      {
+        path: '/tasks',
+        name: 'tasks',
+        icon: 'check-circle-o',
+        routes: [
+          {
+            path: '/tasks/list',
+            name: 'tasklist',
+            component: './Dashboard/Analysis',
+          },
+          {
+            path: '/tasks/publish',
+            name: 'publish',
+            component: './Dashboard/Analysis',
+          },
+        ],
+      },
+      // 卡券管理模块
+      {
+        path: '/cards',
+        name: 'cards',
+        icon: 'check-circle-o',
+        routes: [
+          {
+            path: '/cards/list',
+            name: 'cardlist',
+            component: './Dashboard/Analysis',
+          },
+        ],
+      },
       // forms
       {
         path: '/form',

@@ -132,3 +132,27 @@ export async function Login(params) {
     body: params,
   });
 }
+
+// 用户列表展示
+export async function getUsers(params) {
+  return request('/api/users', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+// 查找用户
+export async function findUsers(params) {
+  return request('/api/find_user_by_phone', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+// 筛选用户
+export async function filterUsers(params) {
+  return request('/api/filter_user_by_status', {
+    method: 'POST',
+    body: params,
+  });
+}

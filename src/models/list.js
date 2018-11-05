@@ -1,4 +1,12 @@
-import { queryFakeList, removeFakeList, addFakeList, updateFakeList } from '@/services/api';
+import {
+  queryFakeList,
+  removeFakeList,
+  addFakeList,
+  updateFakeList,
+  getUsers,
+  findUsers,
+  filterUsers,
+} from '@/services/api';
 
 export default {
   namespace: 'list',
@@ -8,6 +16,36 @@ export default {
   },
 
   effects: {
+    *users({ payload }, { call, put }) {
+      const response = yield call(getUsers, payload);
+      // successfully
+      if (response.code === 0) {
+        yield put({
+          type: 'queryList',
+          payload: Array.isArray(response.data) ? response.data : [],
+        });
+      }
+    },
+    *find({ payload }, { call, put }) {
+      const response = yield call(findUsers, payload);
+      // successfully
+      if (response.code === 0) {
+        yield put({
+          type: 'queryList',
+          payload: Array.isArray(response.data) ? response.data : [],
+        });
+      }
+    },
+    *filter({ payload }, { call, put }) {
+      const response = yield call(filterUsers, payload);
+      // successfully
+      if (response.code === 0) {
+        yield put({
+          type: 'queryList',
+          payload: Array.isArray(response.data) ? response.data : [],
+        });
+      }
+    },
     *fetch({ payload }, { call, put }) {
       const response = yield call(queryFakeList, payload);
       yield put({
