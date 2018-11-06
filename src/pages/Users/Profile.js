@@ -1,115 +1,40 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import Debounce from 'lodash-decorators/debounce';
 import Bind from 'lodash-decorators/bind';
 import { connect } from 'dva';
-import { Button, Menu, Dropdown, Icon, Row, Col, Card, Badge, Table, Tooltip } from 'antd';
+import { Button, Radio, Row, Col, Card, Badge, Table, Tag, Form, Divider, Icon } from 'antd';
 import DescriptionList from '@/components/DescriptionList';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import moment from 'moment';
+
 import styles from './Profile.less';
 
 const { Description } = DescriptionList;
-const ButtonGroup = Button.Group;
 
 const getWindowWidth = () => window.innerWidth || document.documentElement.clientWidth;
 
-const menu = (
-  <Menu>
-    <Menu.Item key="1">选项一</Menu.Item>
-    <Menu.Item key="2">选项二</Menu.Item>
-    <Menu.Item key="3">选项三</Menu.Item>
-  </Menu>
-);
-
-const action = (
-  <Fragment>
-    <ButtonGroup>
-      <Button>操作</Button>
-      <Button>操作</Button>
-      <Dropdown overlay={menu} placement="bottomRight">
-        <Button>
-          <Icon type="ellipsis" />
-        </Button>
-      </Dropdown>
-    </ButtonGroup>
-    <Button type="primary">主操作</Button>
-  </Fragment>
-);
-
-const extra = (
-  <Row>
-    <Col xs={24} sm={12}>
-      <div className={styles.textSecondary}>状态</div>
-      <div className={styles.heading}>待审批</div>
-    </Col>
-    <Col xs={24} sm={12}>
-      <div className={styles.textSecondary}>订单金额</div>
-      <div className={styles.heading}>¥ 568.08</div>
-    </Col>
-  </Row>
-);
-
-const description = (
-  <DescriptionList className={styles.headerList} size="small" col="2">
-    <Description term="创建人">曲丽丽</Description>
-    <Description term="订购产品">XX 服务</Description>
-    <Description term="创建时间">2017-07-07</Description>
-    <Description term="关联单据">
-      <a href="">12421</a>
-    </Description>
-    <Description term="生效日期">2017-07-07 ~ 2017-08-08</Description>
-    <Description term="备注">请于两个工作日内确认</Description>
-  </DescriptionList>
-);
-
-const columns = [
-  {
-    title: '操作类型',
-    dataIndex: 'type',
-    key: 'type',
-  },
-  {
-    title: '操作人',
-    dataIndex: 'name',
-    key: 'name',
-  },
-  {
-    title: '执行结果',
-    dataIndex: 'status',
-    key: 'status',
-    render: text =>
-      text === 'agree' ? (
-        <Badge status="success" text="成功" />
-      ) : (
-        <Badge status="error" text="驳回" />
-      ),
-  },
-  {
-    title: '操作时间',
-    dataIndex: 'updatedAt',
-    key: 'updatedAt',
-  },
-  {
-    title: '备注',
-    dataIndex: 'memo',
-    key: 'memo',
-  },
-];
-
-@connect(({ profile, loading }) => ({
-  profile,
-  loading: loading.effects['profile/fetchAdvanced'],
+@connect(({ users, loading }) => ({
+  users,
+  loading: loading.effects['users/fetch'],
+  submitting: loading.effects['users/submit'],
 }))
+@Form.create()
 class AdvancedProfile extends Component {
   state = {
     operationkey: 'tab1',
     stepDirection: 'horizontal',
+    token: JSON.parse(localStorage.getItem('card-poj-token')),
   };
 
   componentDidMount() {
     const { dispatch, location } = this.props;
+    const { token } = this.state;
     dispatch({
-      type: 'profile/fetchAdvanced',
-      payload: location.query.id,
+      type: 'users/fetch',
+      payload: {
+        ...token,
+        user_id: location.query.id,
+      },
     });
     this.setStepDirection();
     window.addEventListener('resize', this.setStepDirection, { passive: true });
@@ -140,80 +65,207 @@ class AdvancedProfile extends Component {
     }
   }
 
+  handleSubmit = e => {
+    const { dispatch, form, location } = this.props;
+    const { token } = this.state;
+    e.preventDefault();
+    form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        dispatch({
+          type: 'users/submit',
+          payload: {
+            ...token,
+            user_id: location.query.id,
+            status: values.status,
+          },
+        });
+      }
+    });
+  };
+
   render() {
     const { operationkey } = this.state;
-    const { profile, loading } = this.props;
-    const { advancedOperation1, advancedOperation2, advancedOperation3 } = profile;
+    const { loading, users } = this.props;
+    const { submitting } = this.props;
+    const {
+      form: { getFieldDecorator },
+    } = this.props;
+
+    let statusText = '待审批';
+
+    const action = (
+      <Form onSubmit={this.handleSubmit}>
+        {getFieldDecorator('status', {
+          rules: [
+            {
+              required: true,
+              message: '您必须要选择一个审核结果',
+            },
+          ],
+        })(
+          <Radio.Group defaultValue={users.status} buttonStyle="solid">
+            <Radio.Button value="400">驳回</Radio.Button>
+            <Radio.Button value="201">店主</Radio.Button>
+            <Radio.Button value="202">游客</Radio.Button>
+          </Radio.Group>
+        )}
+        <Divider type="vertical" style={{ margin: '0 16px' }} />
+        <Button type="primary" htmlType="submit" loading={submitting}>
+          提交
+        </Button>
+      </Form>
+    );
+
+    switch (+users.status) {
+      case 0:
+        statusText = <span>未认证</span>;
+        break;
+      case 100:
+        statusText = (
+          <span style={{ color: '#096dd9' }}>
+            <Icon type="exclamation-circle" theme="outlined" /> 待审核
+          </span>
+        );
+        break;
+      case 201:
+        statusText = (
+          <span style={{ color: '#52c41a' }}>
+            <Icon type="check-circle" theme="outlined" /> 认证店主
+          </span>
+        );
+        break;
+      case 202:
+        statusText = (
+          <span style={{ color: '#08979c' }}>
+            <Icon type="check-circle" theme="outlined" /> 认证游客
+          </span>
+        );
+        break;
+      case 400:
+        statusText = (
+          <span style={{ color: 'red' }}>
+            <Icon type="close-circle" theme="outlined" /> 审核驳回
+          </span>
+        );
+        break;
+      default:
+        break;
+    }
+
+    const extra = (
+      <Row>
+        <Col xs={24} sm={12}>
+          <div className={styles.textSecondary}>状态</div>
+          <div className={styles.heading}>{statusText}</div>
+        </Col>
+      </Row>
+    );
+
+    const columns = [
+      {
+        title: '任务 ID',
+        dataIndex: 'id',
+        key: 'id',
+        render: id => <a href={`http://localhost:8000/users/profile?id=${users.id}`}>{id}</a>,
+      },
+      {
+        title: '执行人',
+        dataIndex: 'name',
+        key: 'name',
+        render: () => (
+          <Tag color="blue" key={Math.random}>
+            <a href={`http://localhost:8000/users/profile?id=${users.id}`}>{users.name}</a>
+          </Tag>
+        ),
+      },
+      {
+        title: '任务结果',
+        dataIndex: 'status',
+        key: 'status',
+        render: status => {
+          let dom = '';
+          switch (+status) {
+            case 0:
+              dom = <Badge status="default" text="未开始" />;
+              break;
+            case 1:
+              dom = <Badge status="processing" text="审核中" />;
+              break;
+            case 2:
+              dom = <Badge status="success" text="已完成" />;
+              break;
+            case 3:
+              dom = <Badge status="error" text="驳回" />;
+              break;
+            case 4:
+              dom = <Badge status="error" text="已过期" />;
+              break;
+            default:
+              break;
+          }
+          return dom;
+        },
+      },
+      {
+        title: '开始时间',
+        dataIndex: 'begin_time',
+        key: 'begin_time',
+        render: ts => <span>{moment(new Date(ts)).format('YYYY-MM-DD')}</span>,
+      },
+      {
+        title: '结束时间',
+        dataIndex: 'end_time',
+        key: 'end_time',
+        render: ts => <span>{moment(new Date(ts)).format('YYYY-MM-DD')}</span>,
+      },
+    ];
+
     const contentList = {
       tab1: (
-        <Table
-          pagination={false}
-          loading={loading}
-          dataSource={advancedOperation1}
-          columns={columns}
-        />
-      ),
-      tab2: (
-        <Table
-          pagination={false}
-          loading={loading}
-          dataSource={advancedOperation2}
-          columns={columns}
-        />
-      ),
-      tab3: (
-        <Table
-          pagination={false}
-          loading={loading}
-          dataSource={advancedOperation3}
-          columns={columns}
-        />
+        <Table pagination={false} loading={loading} dataSource={users.tasks} columns={columns} />
       ),
     };
 
+    const description = (
+      <DescriptionList className={styles.headerList} size="small" col="2">
+        <Description term="联系方式">{users.phone}</Description>
+        <Description term="认证类型">XX 服务</Description>
+        <Description term="创建时间">{users.created_at}</Description>
+        <Description term="用户 id">
+          <a href="">{users.id}</a>
+        </Description>
+        <Description term="更新日期">{users.updated_at}</Description>
+        <Description term="微信 id">{users.openid}</Description>
+      </DescriptionList>
+    );
+
     return (
       <PageHeaderWrapper
-        title="单号：234231029431"
+        title={users.name}
         logo={
-          <img alt="" src="https://gw.alipayobjects.com/zos/rmsportal/nxkuOJlFJuAUhzlMTCEe.png" />
+          <img
+            alt=""
+            src={
+              users.avatar
+                ? users.avatar
+                : 'https://gw.alipayobjects.com/zos/rmsportal/nxkuOJlFJuAUhzlMTCEe.png'
+            }
+          />
         }
         action={action}
         content={description}
         extraContent={extra}
       >
-        <Card title="用户信息" style={{ marginBottom: 24 }} bordered={false}>
+        <Card title="店铺信息" style={{ marginBottom: 24 }} bordered={false}>
           <DescriptionList style={{ marginBottom: 24 }}>
-            <Description term="用户姓名">付小小</Description>
-            <Description term="会员卡号">32943898021309809423</Description>
-            <Description term="身份证">3321944288191034921</Description>
-            <Description term="联系方式">18112345678</Description>
-            <Description term="联系地址">
-              曲丽丽 18100000000 浙江省杭州市西湖区黄姑山路工专路交叉路口
-            </Description>
-          </DescriptionList>
-          <DescriptionList style={{ marginBottom: 24 }} title="信息组">
-            <Description term="某某数据">725</Description>
-            <Description term="该数据更新时间">2017-08-08</Description>
-            <Description>&nbsp;</Description>
-            <Description
-              term={
-                <span>
-                  某某数据
-                  <Tooltip title="数据说明">
-                    <Icon
-                      style={{ color: 'rgba(0, 0, 0, 0.43)', marginLeft: 4 }}
-                      type="info-circle-o"
-                    />
-                  </Tooltip>
-                </span>
-              }
-            >
-              725
-            </Description>
-            <Description term="该数据更新时间">2017-08-08</Description>
+            <Description term="用户姓名">{users.name}</Description>
+            <Description term="店铺名">{users.shop_name}</Description>
+            <Description term="店铺类别">{users.shop_stauts}</Description>
+            <Description term="联系方式">{users.phone}</Description>
+            <Description term="店铺地址">{users.shop_address}</Description>
           </DescriptionList>
         </Card>
-        <Card title="任务情况" style={{ marginBottom: 24 }} bordered={false}>
+        <Card title="任务列表" style={{ marginBottom: 24 }} bordered={false}>
           {contentList[operationkey]}
         </Card>
       </PageHeaderWrapper>

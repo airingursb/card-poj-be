@@ -156,3 +156,19 @@ export async function filterUsers(params) {
     body: params,
   });
 }
+
+// 用户详情
+export async function getUser(params) {
+  return request('/api/user', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+// 审核用户
+export async function checkUser(params) {
+  return request('/api/check_user', {
+    method: 'POST',
+    body: params,
+  });
+}
