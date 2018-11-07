@@ -133,7 +133,11 @@ export async function Login(params) {
   });
 }
 
-// 用户列表展示
+/**
+ * 用户管理模块
+ */
+
+// 获取用户列表
 export async function getUsers(params) {
   return request('/api/users', {
     method: 'POST',
@@ -168,6 +172,18 @@ export async function getUser(params) {
 // 审核用户
 export async function checkUser(params) {
   return request('/api/check_user', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+/**
+ * 任务管理模块
+ */
+
+// 获取任务列表
+export async function getTasks(params) {
+  return request('/api/tasks', {
     method: 'POST',
     body: params,
   });

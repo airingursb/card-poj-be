@@ -92,6 +92,18 @@ class AdvancedProfile extends Component {
     } = this.props;
 
     let statusText = '待审批';
+    let shopStatus = '未登记';
+
+    switch (+users.shop_stauts) {
+      case 0:
+        shopStatus = '标准门店';
+        break;
+      case 1:
+        shopStatus = '黄色风暴网点';
+        break;
+      default:
+        break;
+    }
 
     const action = (
       <Form onSubmit={this.handleSubmit}>
@@ -186,7 +198,7 @@ class AdvancedProfile extends Component {
           let dom = '';
           switch (+status) {
             case 0:
-              dom = <Badge status="default" text="未开始" />;
+              dom = <Badge status="default" text="未领取" />;
               break;
             case 1:
               dom = <Badge status="processing" text="审核中" />;
@@ -229,12 +241,16 @@ class AdvancedProfile extends Component {
     const description = (
       <DescriptionList className={styles.headerList} size="small" col="2">
         <Description term="联系方式">{users.phone}</Description>
-        <Description term="认证类型">XX 服务</Description>
-        <Description term="创建时间">{users.created_at}</Description>
+        <Description term="认证类型">{shopStatus}</Description>
+        <Description term="创建时间">
+          {users.created_at && users.created_at.replace('T', ' ').replace('.000Z', '')}
+        </Description>
         <Description term="用户 id">
           <a href="">{users.id}</a>
         </Description>
-        <Description term="更新日期">{users.updated_at}</Description>
+        <Description term="更新日期">
+          {users.updated_at && users.updated_at.replace('T', ' ').replace('.000Z', '')}
+        </Description>
         <Description term="微信 id">{users.openid}</Description>
       </DescriptionList>
     );
@@ -264,6 +280,22 @@ class AdvancedProfile extends Component {
             <Description term="联系方式">{users.phone}</Description>
             <Description term="店铺地址">{users.shop_address}</Description>
           </DescriptionList>
+          <Divider style={{ margin: '16px 0' }} />
+          <Description term="营业执照">
+            {users.shop_pic ? (
+              <img
+                style={{ height: '200px' }}
+                alt=""
+                src={
+                  users.shop_pic
+                    ? users.shop_pic
+                    : 'https://gw.alipayobjects.com/zos/rmsportal/nxkuOJlFJuAUhzlMTCEe.png'
+                }
+              />
+            ) : (
+              '未登记'
+            )}
+          </Description>
         </Card>
         <Card title="任务列表" style={{ marginBottom: 24 }} bordered={false}>
           {contentList[operationkey]}

@@ -43,7 +43,6 @@ class FilterCardList extends PureComponent {
       type: 'list/users',
       payload: {
         ...token,
-        count: 88,
       },
     });
   }
