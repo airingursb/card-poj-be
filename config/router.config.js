@@ -67,17 +67,17 @@ export default [
       },
       // 通知管理模块
       {
-        path: '/messages',
-        name: 'messages',
+        path: '/message',
+        name: 'message',
         icon: 'profile',
         routes: [
           {
-            path: '/messages/list',
+            path: '/message/list',
             name: 'messagelist',
             component: './Dashboard/Analysis',
           },
           {
-            path: '/messages/publish',
+            path: '/message/publish',
             name: 'publish',
             component: './Dashboard/Analysis',
           },
@@ -85,17 +85,17 @@ export default [
       },
       // 任务管理模块
       {
-        path: '/tasks',
-        name: 'tasks',
+        path: '/task',
+        name: 'task',
         icon: 'check-circle-o',
         routes: [
           {
-            path: '/tasks/list',
+            path: '/task/list',
             name: 'tasklist',
-            component: './Dashboard/Analysis',
+            component: './Task/TaskList',
           },
           {
-            path: '/tasks/publish',
+            path: '/task/publish',
             name: 'publish',
             component: './Dashboard/Analysis',
           },

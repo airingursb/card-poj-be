@@ -188,3 +188,19 @@ export async function getTasks(params) {
     body: params,
   });
 }
+
+// 过滤任务列表
+export async function filterTasks(params) {
+  return request('/api/filter_task_by_status', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+// 发布任务
+export async function createTask(params) {
+  return request('/api/publish_task', {
+    method: 'POST',
+    body: params,
+  });
+}
