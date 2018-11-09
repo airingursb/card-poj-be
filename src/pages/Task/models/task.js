@@ -1,4 +1,5 @@
-import { getTasks, filterTasks, createTask } from '@/services/api';
+import { getTasks, filterTasks, getNotice, deleteNotice, createNotice } from '@/services/api';
+import { message } from 'antd';
 
 export default {
   namespace: 'task',
@@ -25,7 +26,26 @@ export default {
       }
     },
     *create({ payload }, { call }) {
-      yield call(createTask, payload);
+      yield call(createNotice, payload);
+    },
+    *list({ payload }, { call, put }) {
+      const response = yield call(getNotice, payload);
+      if (response.code === 0) {
+        yield put({
+          type: 'show',
+          payload: response.data,
+        });
+      }
+    },
+    *delete({ payload }, { call, put }) {
+      const response = yield call(deleteNotice, payload);
+      if (response.code === 0) {
+        message.success('删除成功');
+        yield put({
+          type: 'show',
+          payload: response.data,
+        });
+      }
     },
   },
 

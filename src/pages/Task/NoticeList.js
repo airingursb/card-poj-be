@@ -1,17 +1,15 @@
 import React, { PureComponent } from 'react';
+import { findDOMNode } from 'react-dom';
 import moment from 'moment';
 import { connect } from 'dva';
-import { List, Card, Radio, Badge, Button, Avatar, Modal, Form, DatePicker, Select } from 'antd';
+import { List, Card, Button, Avatar, Modal, Form, DatePicker } from 'antd';
 
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import Result from '@/components/Result';
 
-import styles from './TaskList.less';
+import styles from './NoticeList.less';
 
 const FormItem = Form.Item;
-const RadioButton = Radio.Button;
-const RadioGroup = Radio.Group;
-const SelectOption = Select.Option;
 
 @connect(({ list, task, loading }) => ({
   list,
@@ -35,7 +33,7 @@ class TaskList extends PureComponent {
     const { dispatch } = this.props;
     const { token } = this.state;
     dispatch({
-      type: 'task/fetch',
+      type: 'task/list',
       payload: {
         ...token,
       },
@@ -90,86 +88,54 @@ class TaskList extends PureComponent {
     });
   };
 
+  deleteItem = id => {
+    const { dispatch } = this.props;
+    const { token } = this.state;
+    dispatch({
+      type: 'task/delete',
+      payload: { ...token, notice_id: id },
+    });
+  };
+
   render() {
     const {
       task: { list },
       loading,
-      dispatch,
     } = this.props;
     const {
       form: { getFieldDecorator },
     } = this.props;
-    const { token, visible, done, current = {} } = this.state;
+    const { visible, done, current = {} } = this.state;
+
+    const editAndDelete = (key, currentItem) => {
+      if (key === 'edit') this.showEditModal(currentItem);
+      else if (key === 'delete') {
+        Modal.confirm({
+          title: '删除任务',
+          content: '确定删除该任务吗？',
+          okText: '确认',
+          cancelText: '取消',
+          onOk: () => this.deleteItem(currentItem.id),
+        });
+      }
+    };
 
     const modalFooter = done
       ? { footer: null, onCancel: this.handleDone }
-      : { okText: '保存', onOk: this.handleSubmit, onCancel: this.handleCancel };
+      : { okText: '提交', onOk: this.handleSubmit, onCancel: this.handleCancel };
 
-    const extraContent = (
-      <div className={styles.extraContent}>
-        <RadioGroup
-          defaultValue="all"
-          onChange={e => {
-            e.preventDefault();
-            dispatch({
-              type: 'task/filter',
-              payload: {
-                ...token,
-                status: e.target.value,
-              },
-            });
-          }}
-        >
-          <RadioButton value="-1">全部</RadioButton>
-          <RadioButton value="-2">进行中</RadioButton>
-          <RadioButton value="1">审核中</RadioButton>
-          <RadioButton value="2">已完成</RadioButton>
-          <RadioButton value="3">已驳回</RadioButton>
-        </RadioGroup>
+    const ListContent = ({ data }) => (
+      <div className={styles.listContent}>
+        <div className={styles.listContentItem}>
+          <span>开始时间</span>
+          <p>{moment(data.begin_time).format('YYYY-MM-DD')}</p>
+        </div>
+        <div className={styles.listContentItem}>
+          <span>结束时间</span>
+          <p>{moment(data.end_time).format('YYYY-MM-DD')}</p>
+        </div>
       </div>
     );
-
-    const ListContent = ({ data }) => {
-      let dom = '';
-      switch (+data.status) {
-        case 0:
-          dom = <Badge status="default" text="未领取" />;
-          break;
-        case 1:
-          dom = <Badge status="processing" text="审核中" />;
-          break;
-        case 2:
-          dom = <Badge status="success" text="已完成" />;
-          break;
-        case 3:
-          dom = <Badge status="error" text="已驳回" />;
-          break;
-        case 4:
-          dom = <Badge status="error" text="已过期" />;
-          break;
-        default:
-          break;
-      }
-      return (
-        <div className={styles.listContent}>
-          <div className={styles.listContentItem}>
-            <span>执行人</span>
-            <p>
-              <a href={`/users/profile?id=${data.user.id}`}>{data.user.name}</a>
-            </p>
-          </div>
-          <div className={styles.listContentItem}>
-            <span>开始时间</span>
-            <p>{moment(data.begin_time).format('YYYY-MM-DD')}</p>
-          </div>
-          <div className={styles.listContentItem}>
-            <span>结束时间</span>
-            <p>{moment(data.end_time).format('YYYY-MM-DD')}</p>
-          </div>
-          <div className={styles.listContentItem}>{dom}</div>
-        </div>
-      );
-    };
 
     const getModalContent = () => {
       if (done) {
@@ -201,16 +167,6 @@ class TaskList extends PureComponent {
               initialValue: current.end_time ? moment(current.end_time) : null,
             })(<DatePicker placeholder="请选择" format="YYYY-MM-DD" style={{ width: '100%' }} />)}
           </FormItem>
-          <FormItem label="任务负责人" {...this.formLayout}>
-            {getFieldDecorator('owner', {
-              rules: [{ required: true, message: '请选择任务负责人' }],
-              initialValue: current.owner,
-            })(
-              <Select placeholder="请选择">
-                <SelectOption value="all">全部</SelectOption>
-              </Select>
-            )}
-          </FormItem>
         </Form>
       );
     };
@@ -223,8 +179,20 @@ class TaskList extends PureComponent {
             title="任务列表"
             style={{ marginTop: 24 }}
             bodyStyle={{ padding: '0 32px 40px 32px' }}
-            extra={extraContent}
           >
+            <Button
+              type="dashed"
+              style={{ width: '100%', marginBottom: 8 }}
+              icon="plus"
+              onClick={this.showModal}
+              ref={component => {
+                /* eslint-disable */
+                this.addBtn = findDOMNode(component);
+                /* eslint-enable */
+              }}
+            >
+              添加每月任务
+            </Button>
             <List
               size="large"
               rowKey="id"
@@ -232,27 +200,16 @@ class TaskList extends PureComponent {
               pagination={false}
               dataSource={list}
               renderItem={item => (
-                <List.Item
-                  actions={[<a href={`//localhost:8000/task/detail/?id=${item.id}`}>审核</a>]}
-                >
+                <List.Item actions={[<a onClick={() => editAndDelete('delete', item)}>删除</a>]}>
                   <List.Item.Meta
                     avatar={
                       <Avatar
-                        src={
-                          item.user.avatar
-                            ? item.user.avatar
-                            : 'https://gw.alipayobjects.com/zos/rmsportal/nxkuOJlFJuAUhzlMTCEe.png'
-                        }
+                        src="https://gw.alipayobjects.com/zos/rmsportal/nxkuOJlFJuAUhzlMTCEe.png"
                         shape="square"
                         size="large"
                       />
                     }
-                    title={
-                      <a href={`//localhost:8000/task/detail/?id=${item.id}`}>
-                        {item.user.name} 的每月任务
-                      </a>
-                    }
-                    description={`联系方式：${item.user.phone ? item.user.phone : '暂无'}`}
+                    title={<span>每月任务</span>}
                   />
                   <ListContent data={item} />
                 </List.Item>

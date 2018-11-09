@@ -76,11 +76,6 @@ export default [
             name: 'messagelist',
             component: './Dashboard/Analysis',
           },
-          {
-            path: '/message/publish',
-            name: 'publish',
-            component: './Dashboard/Analysis',
-          },
         ],
       },
       // 任务管理模块
@@ -90,14 +85,24 @@ export default [
         icon: 'check-circle-o',
         routes: [
           {
+            path: '/task/show',
+            name: 'taskshow',
+            component: './Task/NoticeList',
+          },
+          {
             path: '/task/list',
             name: 'tasklist',
             component: './Task/TaskList',
+            routes: [
+              {
+                path: '/task/detail',
+                component: './Task/TaskDetail',
+              },
+            ],
           },
           {
-            path: '/task/publish',
-            name: 'publish',
-            component: './Dashboard/Analysis',
+            path: '/task/detail',
+            component: './Task/TaskDetail',
           },
         ],
       },

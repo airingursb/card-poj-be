@@ -181,7 +181,7 @@ export async function checkUser(params) {
  * 任务管理模块
  */
 
-// 获取任务列表
+// 获取审核列表
 export async function getTasks(params) {
   return request('/api/tasks', {
     method: 'POST',
@@ -189,7 +189,7 @@ export async function getTasks(params) {
   });
 }
 
-// 过滤任务列表
+// 过滤审核列表
 export async function filterTasks(params) {
   return request('/api/filter_task_by_status', {
     method: 'POST',
@@ -197,9 +197,33 @@ export async function filterTasks(params) {
   });
 }
 
-// 发布任务
+// FIXME: 发布任务（废弃）
 export async function createTask(params) {
   return request('/api/publish_task', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+// 发布任务
+export async function createNotice(params) {
+  return request('/api/publish_notice', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+// 删除任务
+export async function deleteNotice(params) {
+  return request('/api/delete_notice', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+// 获取任务列表
+export async function getNotice(params) {
+  return request('/api/notice_list', {
     method: 'POST',
     body: params,
   });
