@@ -74,7 +74,17 @@ export default [
           {
             path: '/message/list',
             name: 'messagelist',
-            component: './Dashboard/Analysis',
+            component: './Message/MessageList',
+            routes: [
+              {
+                path: '/message/detail',
+                component: './Message/MessageDetail',
+              },
+            ],
+          },
+          {
+            path: '/message/detail',
+            component: './Message/MessageDetail',
           },
         ],
       },
