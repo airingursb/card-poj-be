@@ -33,7 +33,7 @@ class TaskList extends PureComponent {
     const { dispatch } = this.props;
     const { token } = this.state;
     dispatch({
-      type: 'task/list',
+      type: 'task/notice',
       payload: {
         ...token,
       },
@@ -99,7 +99,7 @@ class TaskList extends PureComponent {
 
   render() {
     const {
-      task: { list },
+      task: { notice },
       loading,
     } = this.props;
     const {
@@ -198,7 +198,7 @@ class TaskList extends PureComponent {
               rowKey="id"
               loading={loading}
               pagination={false}
-              dataSource={list}
+              dataSource={notice}
               renderItem={item => (
                 <List.Item actions={[<a onClick={() => editAndDelete('delete', item)}>删除</a>]}>
                   <List.Item.Meta

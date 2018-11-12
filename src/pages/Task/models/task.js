@@ -32,7 +32,7 @@ export default {
       const response = yield call(getNotice, payload);
       if (response.code === 0) {
         yield put({
-          type: 'show',
+          type: 'showNotice',
           payload: response.data,
         });
       }
@@ -42,7 +42,7 @@ export default {
       if (response.code === 0) {
         message.success('删除成功');
         yield put({
-          type: 'show',
+          type: 'showNotice',
           payload: response.data,
         });
       }
@@ -54,6 +54,12 @@ export default {
       return {
         ...state,
         list: payload,
+      };
+    },
+    showNotice(state, { payload }) {
+      return {
+        ...state,
+        notice: payload,
       };
     },
   },
