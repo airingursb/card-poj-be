@@ -228,3 +228,19 @@ export async function getNotice(params) {
     body: params,
   });
 }
+
+// 获取任务审核详情
+export async function getTask(params) {
+  return request('/api/task', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+// 审核任务
+export async function checkTask(params) {
+  return request('/api/check_task', {
+    method: 'POST',
+    body: params,
+  });
+}

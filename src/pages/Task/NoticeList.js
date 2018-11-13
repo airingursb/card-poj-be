@@ -33,7 +33,7 @@ class TaskList extends PureComponent {
     const { dispatch } = this.props;
     const { token } = this.state;
     dispatch({
-      type: 'task/notice',
+      type: 'task/list',
       payload: {
         ...token,
       },

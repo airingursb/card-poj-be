@@ -1,4 +1,12 @@
-import { getTasks, filterTasks, getNotice, deleteNotice, createNotice } from '@/services/api';
+import {
+  getTask,
+  getTasks,
+  filterTasks,
+  checkTask,
+  getNotice,
+  deleteNotice,
+  createNotice,
+} from '@/services/api';
 import { message } from 'antd';
 
 export default {
@@ -7,6 +15,25 @@ export default {
   state: {},
 
   effects: {
+    *detail({ payload }, { call, put }) {
+      const response = yield call(getTask, payload);
+      if (response.code === 0) {
+        yield put({
+          type: 'info',
+          payload: response.data,
+        });
+      }
+    },
+    *submit({ payload }, { call, put }) {
+      const response = yield call(checkTask, payload);
+      if (response.code === 0) {
+        message.success('审核成功');
+        yield put({
+          type: 'info',
+          payload: response.data,
+        });
+      }
+    },
     *fetch({ payload }, { call, put }) {
       const response = yield call(getTasks, payload);
       if (response.code === 0) {
@@ -60,6 +87,12 @@ export default {
       return {
         ...state,
         notice: payload,
+      };
+    },
+    info(state, { payload }) {
+      return {
+        ...state,
+        data: payload,
       };
     },
   },
