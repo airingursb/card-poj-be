@@ -70,6 +70,7 @@ export default {
   'component.noticeIcon.clear': '清空',
   'component.noticeIcon.cleared': '清空了',
   'component.noticeIcon.empty': '暂无数据',
+  menu: '菜单',
   'menu.home': '首页',
   'menu.users': '用户管理',
   'menu.users.userlist': '用户列表',

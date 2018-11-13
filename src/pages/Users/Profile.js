@@ -115,7 +115,7 @@ class AdvancedProfile extends Component {
             },
           ],
         })(
-          <Radio.Group defaultValue={users.status} buttonStyle="solid">
+          <Radio.Group initialValue={users && users.status} buttonStyle="solid">
             <Radio.Button value="400">驳回</Radio.Button>
             <Radio.Button value="201">店主</Radio.Button>
             <Radio.Button value="202">游客</Radio.Button>
@@ -178,7 +178,7 @@ class AdvancedProfile extends Component {
         title: '任务 ID',
         dataIndex: 'id',
         key: 'id',
-        render: id => <a href={`http://localhost:8000/users/profile?id=${users.id}`}>{id}</a>,
+        render: id => <a href={`/task/detail?id=${id}`}>{id}</a>,
       },
       {
         title: '执行人',
@@ -186,7 +186,7 @@ class AdvancedProfile extends Component {
         key: 'name',
         render: () => (
           <Tag color="blue" key={Math.random}>
-            <a href={`http://localhost:8000/users/profile?id=${users.id}`}>{users.name}</a>
+            <a href={`/users/profile?id=${users.id}`}>{users.name}</a>
           </Tag>
         ),
       },
@@ -262,9 +262,7 @@ class AdvancedProfile extends Component {
           <img
             alt=""
             src={
-              users.avatar
-                ? users.avatar
-                : 'https://gw.alipayobjects.com/zos/rmsportal/nxkuOJlFJuAUhzlMTCEe.png'
+              users.avatar || 'https://gw.alipayobjects.com/zos/rmsportal/nxkuOJlFJuAUhzlMTCEe.png'
             }
           />
         }
@@ -282,19 +280,17 @@ class AdvancedProfile extends Component {
           </DescriptionList>
           <Divider style={{ margin: '16px 0' }} />
           <Description term="营业执照">
-            {users.shop_pic ? (
+            {(users.shop_pic && (
               <img
                 style={{ height: '200px' }}
                 alt=""
                 src={
-                  users.shop_pic
-                    ? users.shop_pic
-                    : 'https://gw.alipayobjects.com/zos/rmsportal/nxkuOJlFJuAUhzlMTCEe.png'
+                  users.shop_pic ||
+                  'https://gw.alipayobjects.com/zos/rmsportal/nxkuOJlFJuAUhzlMTCEe.png'
                 }
               />
-            ) : (
-              '未登记'
-            )}
+            )) ||
+              '未登记'}
           </Description>
         </Card>
         <Card title="任务列表" style={{ marginBottom: 24 }} bordered={false}>
