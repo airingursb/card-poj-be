@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Debounce from 'lodash-decorators/debounce';
 import Bind from 'lodash-decorators/bind';
 import { connect } from 'dva';
-import { Button, Form, Radio, Icon, Row, Col, Card, Divider, Badge } from 'antd';
+import { Button, Form, Radio, Icon, Row, Col, Card, Divider, Badge, Select } from 'antd';
 import DescriptionList from '@/components/DescriptionList';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import moment from 'moment';
@@ -23,6 +23,8 @@ class TaskDetail extends Component {
   state = {
     stepDirection: 'horizontal',
     token: JSON.parse(localStorage.getItem('card-poj-token')),
+    status: '',
+    refuseInfo: '1',
   };
 
   componentDidMount() {
@@ -62,48 +64,58 @@ class TaskDetail extends Component {
     }
   }
 
-  handleSubmit = e => {
-    const { dispatch, form, location } = this.props;
-    const { token } = this.state;
-    e.preventDefault();
-    form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        dispatch({
-          type: 'task/submit',
-          payload: {
-            ...token,
-            task_id: location.query.id,
-            status: values.status,
-          },
-        });
-      }
+  handleSubmit = () => {
+    const { dispatch, location } = this.props;
+    const { token, status, refuseInfo } = this.state;
+    dispatch({
+      type: 'task/submit',
+      payload: {
+        ...token,
+        task_id: location.query.id,
+        status,
+        refuse_info: refuseInfo,
+      },
     });
+  };
+
+  handleChange = e => {
+    const {
+      target: { value },
+    } = e;
+    this.setState({ status: value });
+  };
+
+  handleSelect = e => {
+    this.setState({ refuseInfo: e });
   };
 
   render() {
     const {
       task: { data },
-      form: { getFieldDecorator },
       submitting,
     } = this.props;
 
+    const { status, refuseInfo } = this.state;
+
     const action = (
-      <Form onSubmit={this.handleSubmit}>
-        {getFieldDecorator('status', {
-          rules: [
-            {
-              required: true,
-              message: '您必须要选择一个审核结果',
-            },
-          ],
-        })(
-          <Radio.Group initialValue={data && data.status} buttonStyle="solid">
-            <Radio.Button value="3">驳回</Radio.Button>
-            <Radio.Button value="2">通过</Radio.Button>
-          </Radio.Group>
+      <Form>
+        {status === '3' && (
+          <span style={{ marginRight: 10 }}>
+            拒绝原因：
+            <Select value={refuseInfo} style={{ width: 120 }} onChange={this.handleSelect}>
+              <Select.Option value="1">1</Select.Option>
+              <Select.Option value="2">2</Select.Option>
+              <Select.Option value="3">3</Select.Option>
+              <Select.Option value="4">4</Select.Option>
+            </Select>
+          </span>
         )}
+        <Radio.Group value={status} buttonStyle="solid" onChange={this.handleChange}>
+          <Radio.Button value="3">驳回</Radio.Button>
+          <Radio.Button value="2">通过</Radio.Button>
+        </Radio.Group>
         <Divider type="vertical" style={{ margin: '0 16px' }} />
-        <Button type="primary" htmlType="submit" loading={submitting}>
+        <Button type="primary" loading={submitting} onClick={this.handleSubmit}>
           提交
         </Button>
       </Form>

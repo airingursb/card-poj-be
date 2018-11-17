@@ -5,38 +5,39 @@ import { connect } from 'dva';
 import {
   List,
   Card,
-  // Row,
-  // Col,
-  // Radio,
+  Row,
+  Col,
+  Radio,
   Input,
-  // Progress,
+  Progress,
   Button,
-  // Icon,
-  // Dropdown,
-  // Menu,
-  // Avatar,
+  Icon,
+  Dropdown,
+  Menu,
+  Avatar,
   Modal,
   Form,
   DatePicker,
-  // Select,
+  Select,
 } from 'antd';
 
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import Result from '@/components/Result';
 
-import styles from './MessageList.less';
+import styles from './CardsList.less';
 
 const FormItem = Form.Item;
-// const SelectOption = Select.Option;
-const { TextArea } = Input;
+const RadioButton = Radio.Button;
+const RadioGroup = Radio.Group;
+const SelectOption = Select.Option;
+const { Search, TextArea } = Input;
 
-@connect(({ list, message, loading }) => ({
+@connect(({ list, loading }) => ({
   list,
-  message,
-  loading: loading.models.message,
+  loading: loading.models.list,
 }))
 @Form.create()
-class MessageList extends PureComponent {
+class CardsList extends PureComponent {
   state = { visible: false, done: false };
 
   formLayout = {
@@ -46,11 +47,10 @@ class MessageList extends PureComponent {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    const token = JSON.parse(localStorage.getItem('card-poj-token'));
     dispatch({
-      type: 'message/fetch',
+      type: 'list/fetch',
       payload: {
-        ...token,
+        count: 5,
       },
     });
   }
@@ -97,7 +97,7 @@ class MessageList extends PureComponent {
         done: true,
       });
       dispatch({
-        type: 'message/submit',
+        type: 'list/submit',
         payload: { id, ...fieldsValue },
       });
     });
@@ -105,19 +105,15 @@ class MessageList extends PureComponent {
 
   deleteItem = id => {
     const { dispatch } = this.props;
-    const token = JSON.parse(localStorage.getItem('card-poj-token'));
     dispatch({
-      type: 'message/delete',
-      payload: {
-        ...token,
-        message_id: id,
-      },
+      type: 'list/submit',
+      payload: { id },
     });
   };
 
   render() {
     const {
-      message: { messages },
+      list: { list },
       loading,
     } = this.props;
     const {
@@ -125,27 +121,78 @@ class MessageList extends PureComponent {
     } = this.props;
     const { visible, done, current = {} } = this.state;
 
-    const deleteConfirm = currentItem => {
-      Modal.confirm({
-        title: '删除任务',
-        content: '确定删除该任务吗？',
-        okText: '确认',
-        cancelText: '取消',
-        onOk: () => this.deleteItem(currentItem.id),
-      });
+    const editAndDelete = (key, currentItem) => {
+      if (key === 'edit') this.showEditModal(currentItem);
+      else if (key === 'delete') {
+        Modal.confirm({
+          title: '删除任务',
+          content: '确定删除该任务吗？',
+          okText: '确认',
+          cancelText: '取消',
+          onOk: () => this.deleteItem(currentItem.id),
+        });
+      }
     };
 
     const modalFooter = done
       ? { footer: null, onCancel: this.handleDone }
       : { okText: '保存', onOk: this.handleSubmit, onCancel: this.handleCancel };
 
-    const ListContent = ({ data: item }) => (
+    const Info = ({ title, value, bordered }) => (
+      <div className={styles.headerInfo}>
+        <span>{title}</span>
+        <p>{value}</p>
+        {bordered && <em />}
+      </div>
+    );
+
+    const extraContent = (
+      <div className={styles.extraContent}>
+        <RadioGroup defaultValue="all">
+          <RadioButton value="all">全部</RadioButton>
+          <RadioButton value="progress">进行中</RadioButton>
+          <RadioButton value="waiting">等待中</RadioButton>
+        </RadioGroup>
+        <Search className={styles.extraContentSearch} placeholder="请输入" onSearch={() => ({})} />
+      </div>
+    );
+
+    const paginationProps = {
+      showSizeChanger: true,
+      showQuickJumper: true,
+      pageSize: 5,
+      total: 50,
+    };
+
+    const ListContent = ({ data: { owner, createdAt, percent, status } }) => (
       <div className={styles.listContent}>
         <div className={styles.listContentItem}>
-          <span>发布时间</span>
-          <p>{moment(item.publish_time).format('YYYY-MM-DD HH:mm')}</p>
+          <span>Owner</span>
+          <p>{owner}</p>
+        </div>
+        <div className={styles.listContentItem}>
+          <span>开始时间</span>
+          <p>{moment(createdAt).format('YYYY-MM-DD HH:mm')}</p>
+        </div>
+        <div className={styles.listContentItem}>
+          <Progress percent={percent} status={status} strokeWidth={6} style={{ width: 180 }} />
         </div>
       </div>
+    );
+
+    const MoreBtn = props => (
+      <Dropdown
+        overlay={
+          <Menu onClick={({ key }) => editAndDelete(key, props.current)}>
+            <Menu.Item key="edit">编辑</Menu.Item>
+            <Menu.Item key="delete">删除</Menu.Item>
+          </Menu>
+        }
+      >
+        <a>
+          更多 <Icon type="down" />
+        </a>
+      </Dropdown>
     );
 
     const getModalContent = () => {
@@ -166,22 +213,16 @@ class MessageList extends PureComponent {
       }
       return (
         <Form onSubmit={this.handleSubmit}>
-          <FormItem label="标题" {...this.formLayout}>
+          <FormItem label="任务名称" {...this.formLayout}>
             {getFieldDecorator('title', {
-              rules: [{ required: true, message: '请输入标题' }],
+              rules: [{ required: true, message: '请输入任务名称' }],
               initialValue: current.title,
             })(<Input placeholder="请输入" />)}
           </FormItem>
-          <FormItem {...this.formLayout} label="内容">
-            {getFieldDecorator('content', {
-              rules: [{ message: '请输入内容！', min: 1 }],
-              initialValue: current.subDescription,
-            })(<TextArea rows={4} placeholder="请输入内容" />)}
-          </FormItem>
-          <FormItem label="通知时间" {...this.formLayout}>
-            {getFieldDecorator('publish_time', {
-              rules: [{ required: true, message: '请选择通知时间' }],
-              initialValue: current.publish_time ? moment(current.publish_time) : null,
+          <FormItem label="开始时间" {...this.formLayout}>
+            {getFieldDecorator('createdAt', {
+              rules: [{ required: true, message: '请选择开始时间' }],
+              initialValue: current.createdAt ? moment(current.createdAt) : null,
             })(
               <DatePicker
                 showTime
@@ -191,18 +232,50 @@ class MessageList extends PureComponent {
               />
             )}
           </FormItem>
+          <FormItem label="任务负责人" {...this.formLayout}>
+            {getFieldDecorator('owner', {
+              rules: [{ required: true, message: '请选择任务负责人' }],
+              initialValue: current.owner,
+            })(
+              <Select placeholder="请选择">
+                <SelectOption value="付晓晓">付晓晓</SelectOption>
+                <SelectOption value="周毛毛">周毛毛</SelectOption>
+              </Select>
+            )}
+          </FormItem>
+          <FormItem {...this.formLayout} label="产品描述">
+            {getFieldDecorator('subDescription', {
+              rules: [{ message: '请输入至少五个字符的产品描述！', min: 5 }],
+              initialValue: current.subDescription,
+            })(<TextArea rows={4} placeholder="请输入至少五个字符" />)}
+          </FormItem>
         </Form>
       );
     };
     return (
       <PageHeaderWrapper>
         <div className={styles.standardList}>
+          <Card bordered={false}>
+            <Row>
+              <Col sm={8} xs={24}>
+                <Info title="我的待办" value="8个任务" bordered />
+              </Col>
+              <Col sm={8} xs={24}>
+                <Info title="本周任务平均处理时间" value="32分钟" bordered />
+              </Col>
+              <Col sm={8} xs={24}>
+                <Info title="本周完成任务数" value="24个任务" />
+              </Col>
+            </Row>
+          </Card>
+
           <Card
             className={styles.listCard}
             bordered={false}
-            title="通知列表"
+            title="标准列表"
             style={{ marginTop: 24 }}
             bodyStyle={{ padding: '0 32px 40px 32px' }}
+            extra={extraContent}
           >
             <Button
               type="dashed"
@@ -221,7 +294,8 @@ class MessageList extends PureComponent {
               size="large"
               rowKey="id"
               loading={loading}
-              dataSource={messages}
+              pagination={paginationProps}
+              dataSource={list}
               renderItem={item => (
                 <List.Item
                   actions={[
@@ -233,20 +307,13 @@ class MessageList extends PureComponent {
                     >
                       编辑
                     </a>,
-                    <a
-                      onClick={e => {
-                        e.preventDefault();
-                        deleteConfirm(item);
-                      }}
-                    >
-                      删除
-                    </a>,
+                    <MoreBtn current={item} />,
                   ]}
                 >
                   <List.Item.Meta
-                    // avatar={<Avatar src={item.logo} shape="square" size="large" />}
+                    avatar={<Avatar src={item.logo} shape="square" size="large" />}
                     title={<a href={item.href}>{item.title}</a>}
-                    description={item.content}
+                    description={item.subDescription}
                   />
                   <ListContent data={item} />
                 </List.Item>
@@ -270,4 +337,4 @@ class MessageList extends PureComponent {
   }
 }
 
-export default MessageList;
+export default CardsList;

@@ -27,6 +27,7 @@
   "dependencies": {
     "@antv/data-set": "^0.9.6",
     "@babel/runtime": "^7.1.2",
+    "ajv": "^6.5.5",
     "antd": "^3.10.0",
     "bizcharts": "^3.2.2",
     "bizcharts-plugin-slider": "^2.0.3",
@@ -37,6 +38,7 @@
     "lodash": "^4.17.10",
     "lodash-decorators": "^6.0.0",
     "memoize-one": "^4.0.0",
+    "module": "^1.2.5",
     "moment": "^2.22.2",
     "numeral": "^2.0.6",
     "nzh": "^1.0.3",
@@ -45,13 +47,15 @@
     "prop-types": "^15.5.10",
     "qs": "^6.5.2",
     "rc-animate": "^2.4.4",
-    "react": "^16.5.1",
+    "react": "^16.6.3",
     "react-container-query": "^0.11.0",
     "react-copy-to-clipboard": "^5.0.1",
     "react-document-title": "^2.0.3",
-    "react-dom": "^16.5.1",
+    "react-dom": "^16.6.3",
     "react-fittext": "^1.0.0",
-    "react-router-dom": "^4.3.1"
+    "react-router-dom": "^4.3.1",
+    "redbox-react": "^1.6.0",
+    "rollup": "^0.67.1"
   },
   "devDependencies": {
     "@types/react": "^16.4.16",
