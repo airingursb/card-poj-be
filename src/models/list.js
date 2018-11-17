@@ -6,7 +6,10 @@ import {
   getUsers,
   findUsers,
   filterUsers,
+  sendCard,
 } from '@/services/api';
+
+import { message } from 'antd';
 
 export default {
   namespace: 'list',
@@ -72,6 +75,12 @@ export default {
         type: 'queryList',
         payload: response,
       });
+    },
+    *send({ payload }, { call }) {
+      const response = yield call(sendCard, payload);
+      if (response.code === 0) {
+        message.success('自动发券成功');
+      }
     },
   },
 

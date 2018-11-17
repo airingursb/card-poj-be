@@ -244,3 +244,11 @@ export async function checkTask(params) {
     body: params,
   });
 }
+
+// 发放卡券
+export async function sendCard(params) {
+  return request('/api/send_card', {
+    method: 'POST',
+    body: params,
+  });
+}
