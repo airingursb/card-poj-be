@@ -62,7 +62,7 @@ export default {
   },
   proxy: {
     '/api/': {
-      target: 'http://localhost:3045/admin/',
+      target: 'https://api.totolelanzhou.com/admin/',
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     },

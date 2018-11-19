@@ -127,7 +127,7 @@ export async function getFakeCaptcha(mobile) {
 
 // 管理员登陆
 export async function Login(params) {
-  return request('/api/login', {
+  return request('https://api.totolelanzhou.com/admin/login', {
     method: 'POST',
     body: params,
   });
@@ -139,7 +139,7 @@ export async function Login(params) {
 
 // 获取用户列表
 export async function getUsers(params) {
-  return request('/api/users', {
+  return request('https://api.totolelanzhou.com/admin/users', {
     method: 'POST',
     body: params,
   });
@@ -147,7 +147,7 @@ export async function getUsers(params) {
 
 // 查找用户
 export async function findUsers(params) {
-  return request('/api/find_user_by_phone', {
+  return request('https://api.totolelanzhou.com/admin/find_user_by_phone', {
     method: 'POST',
     body: params,
   });
@@ -155,7 +155,7 @@ export async function findUsers(params) {
 
 // 筛选用户
 export async function filterUsers(params) {
-  return request('/api/filter_user_by_status', {
+  return request('https://api.totolelanzhou.com/admin/filter_user_by_status', {
     method: 'POST',
     body: params,
   });
@@ -163,7 +163,7 @@ export async function filterUsers(params) {
 
 // 用户详情
 export async function getUser(params) {
-  return request('/api/user', {
+  return request('https://api.totolelanzhou.com/admin/user', {
     method: 'POST',
     body: params,
   });
@@ -171,7 +171,7 @@ export async function getUser(params) {
 
 // 审核用户
 export async function checkUser(params) {
-  return request('/api/check_user', {
+  return request('https://api.totolelanzhou.com/admin/check_user', {
     method: 'POST',
     body: params,
   });
@@ -183,7 +183,7 @@ export async function checkUser(params) {
 
 // 获取审核列表
 export async function getTasks(params) {
-  return request('/api/tasks', {
+  return request('https://api.totolelanzhou.com/admin/tasks', {
     method: 'POST',
     body: params,
   });
@@ -191,7 +191,7 @@ export async function getTasks(params) {
 
 // 过滤审核列表
 export async function filterTasks(params) {
-  return request('/api/filter_task_by_status', {
+  return request('https://api.totolelanzhou.com/admin/filter_task_by_status', {
     method: 'POST',
     body: params,
   });
@@ -199,7 +199,7 @@ export async function filterTasks(params) {
 
 // FIXME: 发布任务（废弃）
 export async function createTask(params) {
-  return request('/api/publish_task', {
+  return request('https://api.totolelanzhou.com/admin/publish_task', {
     method: 'POST',
     body: params,
   });
@@ -207,7 +207,9 @@ export async function createTask(params) {
 
 // 创建或修改消息
 export async function editMessage(params) {
-  const url = params.id ? '/api/edit_message' : '/api/publish_message';
+  const url = params.id
+    ? 'https://api.totolelanzhou.com/admin/edit_message'
+    : 'https://api.totolelanzhou.com/admin/publish_message';
   return request(url, {
     method: 'POST',
     body: params,
@@ -216,7 +218,7 @@ export async function editMessage(params) {
 
 // 删除消息
 export async function deleteMessage(params) {
-  return request('/api/delete_message', {
+  return request('https://api.totolelanzhou.com/admin/delete_message', {
     method: 'POST',
     body: params,
   });
@@ -224,7 +226,7 @@ export async function deleteMessage(params) {
 
 // 获取任务列表
 export async function getNotice(params) {
-  return request('/api/notice_list', {
+  return request('https://api.totolelanzhou.com/admin/notice_list', {
     method: 'POST',
     body: params,
   });
@@ -232,7 +234,7 @@ export async function getNotice(params) {
 
 // 获取任务审核详情
 export async function getTask(params) {
-  return request('/api/task', {
+  return request('https://api.totolelanzhou.com/admin/task', {
     method: 'POST',
     body: params,
   });
@@ -240,7 +242,7 @@ export async function getTask(params) {
 
 // 审核任务
 export async function checkTask(params) {
-  return request('/api/check_task', {
+  return request('https://api.totolelanzhou.com/admin/check_task', {
     method: 'POST',
     body: params,
   });
@@ -248,7 +250,7 @@ export async function checkTask(params) {
 
 // 获取通知
 export async function getMessages(params) {
-  return request('/api/messages', {
+  return request('https://api.totolelanzhou.com/admin/messages', {
     method: 'POST',
     body: params,
   });
@@ -256,7 +258,7 @@ export async function getMessages(params) {
 
 // 发放卡券
 export async function sendCard(params) {
-  return request('/api/send_card', {
+  return request('https://api.totolelanzhou.com/admin/send_card', {
     method: 'POST',
     body: params,
   });
