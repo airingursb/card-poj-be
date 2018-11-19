@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import numeral from 'numeral';
 import { connect } from 'dva';
-import { Row, Col, Form, Card, Select, Avatar, List, Input, Icon } from 'antd';
+import { Row, Col, Form, Card, Select, Avatar, List, Input, Icon, Button } from 'antd';
 import StandardFormRow from '@/components/StandardFormRow';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import Link from 'umi/link';
@@ -55,6 +55,17 @@ class FilterCardList extends PureComponent {
       payload: {
         ...token,
         phone: value,
+      },
+    });
+  };
+
+  handleClick = () => {
+    const { dispatch } = this.props;
+    const { token } = this.state;
+    dispatch({
+      type: 'list/send',
+      payload: {
+        ...token,
       },
     });
   };
@@ -155,6 +166,13 @@ class FilterCardList extends PureComponent {
                           <Option value="400">审核不通过</Option>
                         </Select>
                       )}
+                    </FormItem>
+                  </Col>
+                  <Col lg={8} md={10} sm={10} xs={24}>
+                    <FormItem {...formItemLayout}>
+                      <Button type="primary" onClick={this.handleClick}>
+                        自动发放卡券
+                      </Button>
                     </FormItem>
                   </Col>
                 </Row>
