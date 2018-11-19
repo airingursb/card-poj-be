@@ -125,7 +125,17 @@ export default [
           {
             path: '/cards/list',
             name: 'cardlist',
-            component: './Dashboard/Analysis',
+            component: './Cards/CardsList',
+            routes: [
+              {
+                path: '/cards/detail',
+                component: './Cards/CardsDetail',
+              },
+            ],
+          },
+          {
+            path: '/cards/detail',
+            component: './Cards/CardsDetail',
           },
         ],
       },

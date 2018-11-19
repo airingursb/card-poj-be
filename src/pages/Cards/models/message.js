@@ -1,21 +1,14 @@
-import {
-  getMessages,
-  editMessage,
-  filterTasks,
-  getNotice,
-  deleteMessage,
-  createNotice,
-} from '@/services/api';
+import { getTasks, filterTasks, getNotice, deleteNotice, createNotice } from '@/services/api';
 import { message } from 'antd';
 
 export default {
-  namespace: 'message',
+  namespace: 'cards',
 
   state: {},
 
   effects: {
     *fetch({ payload }, { call, put }) {
-      const response = yield call(getMessages, payload);
+      const response = yield call(getTasks, payload);
       if (response.code === 0) {
         yield put({
           type: 'show',
@@ -44,17 +37,8 @@ export default {
         });
       }
     },
-    *submit({ payload }, { call, put }) {
-      const response = yield call(editMessage, payload);
-      if (response.code === 0) {
-        yield put({
-          type: 'edit',
-          payload: response.data,
-        });
-      }
-    },
     *delete({ payload }, { call, put }) {
-      const response = yield call(deleteMessage, payload);
+      const response = yield call(deleteNotice, payload);
       if (response.code === 0) {
         message.success('删除成功');
         yield put({
@@ -69,7 +53,7 @@ export default {
     show(state, { payload }) {
       return {
         ...state,
-        messages: payload,
+        list: payload,
       };
     },
   },

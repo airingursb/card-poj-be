@@ -205,17 +205,18 @@ export async function createTask(params) {
   });
 }
 
-// 发布任务
-export async function createNotice(params) {
-  return request('/api/publish_notice', {
+// 创建或修改消息
+export async function editMessage(params) {
+  const url = params.id ? '/api/edit_message' : '/api/publish_message';
+  return request(url, {
     method: 'POST',
     body: params,
   });
 }
 
-// 删除任务
-export async function deleteNotice(params) {
-  return request('/api/delete_notice', {
+// 删除消息
+export async function deleteMessage(params) {
+  return request('/api/delete_message', {
     method: 'POST',
     body: params,
   });
@@ -240,6 +241,14 @@ export async function getTask(params) {
 // 审核任务
 export async function checkTask(params) {
   return request('/api/check_task', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+// 获取通知
+export async function getMessages(params) {
+  return request('/api/messages', {
     method: 'POST',
     body: params,
   });
