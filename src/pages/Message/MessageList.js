@@ -17,7 +17,7 @@ import {
   // Avatar,
   Modal,
   Form,
-  DatePicker,
+  // DatePicker,
   // Select,
 } from 'antd';
 
@@ -89,6 +89,7 @@ class MessageList extends PureComponent {
     const { dispatch, form } = this.props;
     const { current } = this.state;
     const id = current ? current.id : '';
+    const token = JSON.parse(localStorage.getItem('card-poj-token'));
 
     setTimeout(() => this.addBtn.blur(), 0);
     form.validateFields((err, fieldsValue) => {
@@ -98,7 +99,7 @@ class MessageList extends PureComponent {
       });
       dispatch({
         type: 'message/submit',
-        payload: { id, ...fieldsValue },
+        payload: { id, ...token, ...fieldsValue },
       });
     });
   };
@@ -178,19 +179,6 @@ class MessageList extends PureComponent {
               initialValue: current.subDescription,
             })(<TextArea rows={4} placeholder="请输入内容" />)}
           </FormItem>
-          <FormItem label="通知时间" {...this.formLayout}>
-            {getFieldDecorator('publish_time', {
-              rules: [{ required: true, message: '请选择通知时间' }],
-              initialValue: current.publish_time ? moment(current.publish_time) : null,
-            })(
-              <DatePicker
-                showTime
-                placeholder="请选择"
-                format="YYYY-MM-DD HH:mm:ss"
-                style={{ width: '100%' }}
-              />
-            )}
-          </FormItem>
         </Form>
       );
     };
@@ -225,14 +213,6 @@ class MessageList extends PureComponent {
               renderItem={item => (
                 <List.Item
                   actions={[
-                    <a
-                      onClick={e => {
-                        e.preventDefault();
-                        this.showEditModal(item);
-                      }}
-                    >
-                      编辑
-                    </a>,
                     <a
                       onClick={e => {
                         e.preventDefault();
