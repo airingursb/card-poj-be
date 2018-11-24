@@ -72,5 +72,11 @@ export default {
         messages: payload,
       };
     },
+    edit(state, { payload }) {
+      return {
+        ...state,
+        messages: payload,
+      };
+    },
   },
 };
