@@ -232,9 +232,7 @@ class TaskList extends PureComponent {
               pagination={false}
               dataSource={list}
               renderItem={item => (
-                <List.Item
-                  actions={[<a href={`//localhost:8000/task/detail/?id=${item.id}`}>审核</a>]}
-                >
+                <List.Item actions={[<a href={`/task/detail/?id=${item.id}`}>审核</a>]}>
                   <List.Item.Meta
                     avatar={
                       <Avatar
@@ -247,11 +245,7 @@ class TaskList extends PureComponent {
                         size="large"
                       />
                     }
-                    title={
-                      <a href={`//localhost:8000/task/detail/?id=${item.id}`}>
-                        {item.user.name} 的每月任务
-                      </a>
-                    }
+                    title={<a href={`/task/detail/?id=${item.id}`}>{item.user.name} 的每月任务</a>}
                     description={`联系方式：${item.user.phone ? item.user.phone : '暂无'}`}
                   />
                   <ListContent data={item} />

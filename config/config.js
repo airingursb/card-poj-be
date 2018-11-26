@@ -52,6 +52,7 @@ export default {
   },
   // 路由配置
   routes: pageRoutes,
+  history: 'hash',
   // Theme for antd
   // https://ant.design/docs/react/customize-theme-cn
   theme: {

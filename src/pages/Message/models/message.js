@@ -47,6 +47,7 @@ export default {
     *submit({ payload }, { call, put }) {
       const response = yield call(editMessage, payload);
       if (response.code === 0) {
+        message.success('发布成功');
         yield put({
           type: 'edit',
           payload: response.data,

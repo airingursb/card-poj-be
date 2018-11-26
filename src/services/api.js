@@ -205,6 +205,14 @@ export async function createTask(params) {
   });
 }
 
+// 发布任务
+export async function createNotice(params) {
+  return request('https://api.totolelanzhou.com/admin/publish_notice', {
+    method: 'POST',
+    body: params,
+  });
+}
+
 // 创建或修改消息
 export async function editMessage(params) {
   const url = params.id

@@ -2,24 +2,7 @@ import React, { PureComponent } from 'react';
 import { findDOMNode } from 'react-dom';
 import moment from 'moment';
 import { connect } from 'dva';
-import {
-  List,
-  Card,
-  // Row,
-  // Col,
-  // Radio,
-  Input,
-  // Progress,
-  Button,
-  // Icon,
-  // Dropdown,
-  // Menu,
-  // Avatar,
-  Modal,
-  Form,
-  // DatePicker,
-  // Select,
-} from 'antd';
+import { List, Card, Input, Button, Modal, Form } from 'antd';
 
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import Result from '@/components/Result';
@@ -27,7 +10,6 @@ import Result from '@/components/Result';
 import styles from './MessageList.less';
 
 const FormItem = Form.Item;
-// const SelectOption = Select.Option;
 const { TextArea } = Input;
 
 @connect(({ list, message, loading }) => ({
@@ -154,8 +136,8 @@ class MessageList extends PureComponent {
         return (
           <Result
             type="success"
-            title="操作成功"
-            description="一系列的信息描述，很短同样也可以带标点。"
+            title="发布成功"
+            description="已成功发布通知，并向所有的认证店主群发了通知短信。"
             actions={
               <Button type="primary" onClick={this.handleDone}>
                 知道了
