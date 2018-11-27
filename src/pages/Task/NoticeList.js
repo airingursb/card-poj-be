@@ -60,7 +60,6 @@ class TaskList extends PureComponent {
       done: false,
       visible: false,
     });
-    window.location.reload();
   };
 
   handleCancel = () => {
@@ -143,7 +142,7 @@ class TaskList extends PureComponent {
           <Result
             type="success"
             title="创建成功"
-            description="您已成功为所有认证用户发布了任务，因数据量较大，现为您刷新页面获取最新数据。"
+            description="您已成功为所有认证用户发布了任务。"
             actions={
               <Button type="primary" onClick={this.handleDone}>
                 知道了

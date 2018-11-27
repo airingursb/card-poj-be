@@ -52,8 +52,15 @@ export default {
         });
       }
     },
-    *create({ payload }, { call }) {
-      yield call(createNotice, payload);
+    *create({ payload }, { call, put }) {
+      const response = yield call(createNotice, payload);
+      if (response.code === 0) {
+        message.success('发布成功');
+        yield put({
+          type: 'showNotice',
+          payload: response.data,
+        });
+      }
     },
     *list({ payload }, { call, put }) {
       const response = yield call(getNotice, payload);

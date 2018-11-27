@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
 import { List, Card, Radio, Badge, Button, Avatar, Modal, Form, DatePicker, Select } from 'antd';
+import Link from 'umi/link';
 
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import Result from '@/components/Result';
@@ -155,7 +156,7 @@ class TaskList extends PureComponent {
           <div className={styles.listContentItem}>
             <span>执行人</span>
             <p>
-              <a href={`/users/profile?id=${data.user.id}`}>{data.user.name}</a>
+              <Link to={`/users/profile?id=${data.user.id}`}>{data.user.name}</Link>
             </p>
           </div>
           <div className={styles.listContentItem}>
@@ -232,7 +233,7 @@ class TaskList extends PureComponent {
               pagination={false}
               dataSource={list}
               renderItem={item => (
-                <List.Item actions={[<a href={`/task/detail/?id=${item.id}`}>审核</a>]}>
+                <List.Item actions={[<Link to={`/task/detail/?id=${item.id}`}>审核</Link>]}>
                   <List.Item.Meta
                     avatar={
                       <Avatar
@@ -245,7 +246,9 @@ class TaskList extends PureComponent {
                         size="large"
                       />
                     }
-                    title={<a href={`/task/detail/?id=${item.id}`}>{item.user.name} 的每月任务</a>}
+                    title={
+                      <Link to={`/task/detail/?id=${item.id}`}>{item.user.name} 的每月任务</Link>
+                    }
                     description={`联系方式：${item.user.phone ? item.user.phone : '暂无'}`}
                   />
                   <ListContent data={item} />
