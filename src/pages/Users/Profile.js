@@ -93,7 +93,15 @@ class AdvancedProfile extends Component {
 
     let statusText = '待审批';
     let shopStatus = '未登记';
+    let cardStatus = '未领取';
 
+    if (+users.task_times > 10) {
+      cardStatus = '可领取';
+      if (+users.card_num === 1) cardStatus = '可领取';
+      if (+users.is_obtain === 1) cardStatus = '已领取';
+    } else {
+      cardStatus = '没有资格领取';
+    }
     switch (+users.shop_stauts) {
       case 0:
         shopStatus = '标准门店';
@@ -241,7 +249,7 @@ class AdvancedProfile extends Component {
     const description = (
       <DescriptionList className={styles.headerList} size="small" col="2">
         <Description term="联系方式">{users.phone}</Description>
-        <Description term="认证类型">{shopStatus}</Description>
+        <Description term="门店类型">{shopStatus}</Description>
         <Description term="创建时间">
           {users.created_at && users.created_at.replace('T', ' ').replace('.000Z', '')}
         </Description>
@@ -251,7 +259,7 @@ class AdvancedProfile extends Component {
         <Description term="更新日期">
           {users.updated_at && users.updated_at.replace('T', ' ').replace('.000Z', '')}
         </Description>
-        <Description term="微信 id">{users.openid}</Description>
+        <Description term="本月卡券">{cardStatus}</Description>
       </DescriptionList>
     );
 

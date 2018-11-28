@@ -59,7 +59,7 @@ class UserLayout extends React.PureComponent {
                 <span className={styles.title}>太太乐</span>
               </Link>
             </div>
-            <div className={styles.desc}>兰州太太乐食品有限公司电子卡券系统管理后台</div>
+            <div className={styles.desc}>太太乐兰州分公司市场检核管理平台</div>
           </div>
           {children}
         </div>
