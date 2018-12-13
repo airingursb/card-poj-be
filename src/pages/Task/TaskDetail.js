@@ -253,6 +253,16 @@ class TaskDetail extends Component {
         </Card>
         <Card title="任务信息" style={{ marginBottom: 24 }} bordered={false}>
           <DescriptionList style={{ marginBottom: 24 }} title="商品任务">
+            <Description term="门头图">
+              <img
+                style={{ height: '200px' }}
+                alt=""
+                src={
+                  (data && data.pic_shop) ||
+                  'https://gw.alipayobjects.com/zos/rmsportal/nxkuOJlFJuAUhzlMTCEe.png'
+                }
+              />
+            </Description>
             <Description term="远景图">
               <img
                 style={{ height: '200px' }}
