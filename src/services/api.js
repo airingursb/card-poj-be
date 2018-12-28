@@ -213,6 +213,14 @@ export async function createNotice(params) {
   });
 }
 
+// 删除任务
+export async function deleteNotice(params) {
+  return request('https://api.totolelanzhou.com/admin/delete_notice', {
+    method: 'POST',
+    body: params,
+  });
+}
+
 // 创建或修改消息
 export async function editMessage(params) {
   const url = params.id
