@@ -24,9 +24,12 @@ class AdvancedProfile extends Component {
     operationkey: 'tab1',
     stepDirection: 'horizontal',
     token: JSON.parse(localStorage.getItem('card-poj-token')),
+    shopStatus: '',
+    statusText: '待审批',
+    cardStatus: '未领取',
   };
 
-  componentDidMount() {
+  componentWillMount() {
     const { dispatch, location } = this.props;
     const { token } = this.state;
     dispatch({
@@ -85,15 +88,12 @@ class AdvancedProfile extends Component {
 
   render() {
     const { operationkey } = this.state;
+    let { statusText, shopStatus, cardStatus } = this.state;
     const { loading, users } = this.props;
     const { submitting } = this.props;
     const {
       form: { getFieldDecorator },
     } = this.props;
-
-    let statusText = '待审批';
-    let shopStatus = '未登记';
-    let cardStatus = '未领取';
 
     if (+users.task_times > 10) {
       cardStatus = '可领取';
@@ -102,39 +102,18 @@ class AdvancedProfile extends Component {
     } else {
       cardStatus = '没有资格领取';
     }
-    switch (+users.shop_stauts) {
+
+    switch (+users.shop_status) {
       case 0:
-        shopStatus = '标准门店';
-        break;
-      case 1:
         shopStatus = '黄色风暴网点';
         break;
+      case 1:
+        shopStatus = '标准门店';
+        break;
       default:
+        shopStatus = '未登记';
         break;
     }
-
-    const action = (
-      <Form onSubmit={this.handleSubmit}>
-        {getFieldDecorator('status', {
-          rules: [
-            {
-              required: true,
-              message: '您必须要选择一个审核结果',
-            },
-          ],
-        })(
-          <Radio.Group initialValue={users && users.status} buttonStyle="solid">
-            <Radio.Button value="400">驳回</Radio.Button>
-            <Radio.Button value="201">店主</Radio.Button>
-            <Radio.Button value="202">游客</Radio.Button>
-          </Radio.Group>
-        )}
-        <Divider type="vertical" style={{ margin: '0 16px' }} />
-        <Button type="primary" htmlType="submit" loading={submitting}>
-          提交
-        </Button>
-      </Form>
-    );
 
     switch (+users.status) {
       case 0:
@@ -172,6 +151,28 @@ class AdvancedProfile extends Component {
         break;
     }
 
+    const action = (
+      <Form onSubmit={this.handleSubmit}>
+        {getFieldDecorator('status', {
+          rules: [
+            {
+              required: true,
+              message: '您必须要选择一个审核结果',
+            },
+          ],
+        })(
+          <Radio.Group initialValue={users && users.status} buttonStyle="solid">
+            <Radio.Button value="400">驳回</Radio.Button>
+            <Radio.Button value="201">店主</Radio.Button>
+            <Radio.Button value="202">游客</Radio.Button>
+          </Radio.Group>
+        )}
+        <Divider type="vertical" style={{ margin: '0 16px' }} />
+        <Button type="primary" htmlType="submit" loading={submitting}>
+          提交
+        </Button>
+      </Form>
+    );
     const extra = (
       <Row>
         <Col xs={24} sm={12}>
@@ -282,7 +283,7 @@ class AdvancedProfile extends Component {
           <DescriptionList style={{ marginBottom: 24 }}>
             <Description term="用户姓名">{users.name}</Description>
             <Description term="店铺名">{users.shop_name}</Description>
-            <Description term="店铺类别">{users.shop_stauts}</Description>
+            <Description term="店铺类别">{shopStatus}</Description>
             <Description term="联系方式">{users.phone}</Description>
             <Description term="店铺地址">{users.shop_address}</Description>
           </DescriptionList>

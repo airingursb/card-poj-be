@@ -123,6 +123,18 @@ class TaskDetail extends Component {
 
     let statusText = '';
     let statusShow = '';
+    let shopStatus = '';
+
+    switch (data && data.user && +data.user.shop_status) {
+      case 0:
+        shopStatus = '黄色风暴网点';
+        break;
+      case 1:
+        shopStatus = '标准门店';
+        break;
+      default:
+        break;
+    }
 
     switch (data && data.user && +data.user.status) {
       case 0:
@@ -230,7 +242,7 @@ class TaskDetail extends Component {
           <DescriptionList style={{ marginBottom: 24 }}>
             <Description term="用户姓名">{data && data.user && data.user.name}</Description>
             <Description term="店铺名">{data && data.user && data.user.shop_name}</Description>
-            <Description term="店铺类别">{data && data.user && data.user.shop_stauts}</Description>
+            <Description term="店铺类别">{shopStatus}</Description>
             <Description term="联系方式">{data && data.user && data.user.phone}</Description>
             <Description term="店铺地址">{data && data.user && data.user.shop_address}</Description>
           </DescriptionList>
