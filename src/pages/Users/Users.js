@@ -5,6 +5,9 @@ import { Row, Col, Form, Card, Select, Avatar, List, Input, Icon, Button } from 
 import StandardFormRow from '@/components/StandardFormRow';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import Link from 'umi/link';
+import { CSVLink } from 'react-csv';
+
+import axios from 'axios';
 
 import styles from './Users.less';
 
@@ -34,6 +37,10 @@ const FormItem = Form.Item;
 class FilterCardList extends PureComponent {
   state = {
     token: JSON.parse(localStorage.getItem('card-poj-token')),
+    csvData: [
+      { firstname: 'Ahmed', lastname: 'Tomi', email: 'ah@smthing.co.com' },
+      { firstname: 'Raed', lastname: 'Labes', email: 'rl@smthing.co.com' },
+    ],
   };
 
   componentDidMount() {
@@ -45,6 +52,15 @@ class FilterCardList extends PureComponent {
         ...token,
       },
     });
+    axios
+      .post('https://api.totolelanzhou.com/admin/export_users', {
+        ...token,
+      })
+      .then(res => {
+        this.setState({
+          csvData: res.data.data,
+        });
+      });
   }
 
   handleFormSubmit = value => {
@@ -77,6 +93,8 @@ class FilterCardList extends PureComponent {
       form,
     } = this.props;
     const { getFieldDecorator } = form;
+
+    const { csvData } = this.state;
 
     const CardInfo = ({ phone, status }) => {
       let mode = '';
@@ -147,6 +165,19 @@ class FilterCardList extends PureComponent {
       </div>
     );
 
+    const headers = [
+      { label: 'id', key: 'id' },
+      { label: '昵称', key: 'name' },
+      { label: '用户身份', key: 'status' },
+      { label: '店铺名', key: 'shop_name' },
+      { label: '店铺类别', key: 'shop_status' },
+      { label: '店铺地址', key: 'shop_address' },
+      { label: '联系方式', key: 'phone' },
+      { label: '卡券数目', key: 'card_num' },
+      { label: '是否领取卡券', key: 'is_obtain' },
+      { label: '本月完成任务', key: 'task_times' },
+    ];
+
     return (
       <PageHeaderWrapper title="搜索列表" content={mainSearch} onTabChange={this.handleTabChange}>
         <div className={styles.filterCardList}>
@@ -172,6 +203,19 @@ class FilterCardList extends PureComponent {
                     <FormItem {...formItemLayout}>
                       <Button type="primary" onClick={this.handleClick}>
                         自动发放卡券
+                      </Button>
+                    </FormItem>
+                  </Col>
+                  <Col lg={8} md={10} sm={10} xs={24}>
+                    <FormItem {...formItemLayout}>
+                      <Button type="primary">
+                        <CSVLink
+                          data={csvData}
+                          headers={headers}
+                          filename={'用户信息.csv'} // eslint-disable-line
+                        >
+                          导出成 Excel
+                        </CSVLink>
                       </Button>
                     </FormItem>
                   </Col>
