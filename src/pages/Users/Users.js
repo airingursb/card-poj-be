@@ -167,8 +167,8 @@ class FilterCardList extends PureComponent {
 
     const headers = [
       { label: 'id', key: 'id' },
-      { label: '昵称', key: 'name' },
-      { label: '用户身份', key: 'status' },
+      { label: '姓名', key: 'name' },
+      { label: '身份', key: 'status' },
       { label: '店铺名', key: 'shop_name' },
       { label: '店铺类别', key: 'shop_status' },
       { label: '店铺地址', key: 'shop_address' },
