@@ -3,9 +3,11 @@ import moment from 'moment';
 import { connect } from 'dva';
 import { List, Card, Radio, Badge, Button, Avatar, Modal, Form, DatePicker, Select } from 'antd';
 import Link from 'umi/link';
+import { CSVLink } from 'react-csv';
 
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import Result from '@/components/Result';
+import axios from 'axios';
 
 import styles from './TaskList.less';
 
@@ -25,6 +27,10 @@ class TaskList extends PureComponent {
     visible: false,
     done: false,
     token: JSON.parse(localStorage.getItem('card-poj-token')),
+    csvData: [
+      { firstname: 'Ahmed', lastname: 'Tomi', email: 'ah@smthing.co.com' },
+      { firstname: 'Raed', lastname: 'Labes', email: 'rl@smthing.co.com' },
+    ],
   };
 
   formLayout = {
@@ -41,6 +47,16 @@ class TaskList extends PureComponent {
         ...token,
       },
     });
+
+    axios
+      .post('https://api.totolelanzhou.com/admin/export_tasks', {
+        ...token,
+      })
+      .then(res => {
+        this.setState({
+          csvData: res.data.data,
+        });
+      });
   }
 
   showModal = () => {
@@ -100,7 +116,16 @@ class TaskList extends PureComponent {
     const {
       form: { getFieldDecorator },
     } = this.props;
-    const { token, visible, done, current = {} } = this.state;
+    const { token, visible, done, current = {}, csvData } = this.state;
+
+    const headers = [
+      { label: 'id', key: 'id' },
+      { label: '姓名', key: 'user_id' },
+      { label: '审核状态', key: 'status' },
+      { label: '任务开始时间', key: 'begin_time' },
+      { label: '任务结束时间', key: 'end_time' },
+      { label: '提交时间', key: 'finish_time' },
+    ];
 
     const modalFooter = done
       ? { footer: null, onCancel: this.handleDone }
@@ -108,6 +133,15 @@ class TaskList extends PureComponent {
 
     const extraContent = (
       <div className={styles.extraContent}>
+        <Button type="primary">
+          <CSVLink
+            data={csvData}
+            headers={headers}
+            filename={'审核信息.csv'} // eslint-disable-line
+          >
+            导出成 Excel
+          </CSVLink>
+        </Button>
         <RadioGroup
           defaultValue="all"
           onChange={e => {
