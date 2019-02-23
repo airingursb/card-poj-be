@@ -30,6 +30,7 @@
     "ajv": "^6.5.5",
     "antd": "^3.10.0",
     "axios": "^0.18.0",
+    "axios-jsonp": "^1.0.2",
     "bizcharts": "^3.2.2",
     "bizcharts-plugin-slider": "^2.0.3",
     "classnames": "^2.2.6",

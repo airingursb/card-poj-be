@@ -8,6 +8,7 @@ import Link from 'umi/link';
 import { CSVLink } from 'react-csv';
 
 import axios from 'axios';
+import jsonpAdapter from 'axios-jsonp';
 
 import styles from './Users.less';
 
@@ -52,15 +53,16 @@ class FilterCardList extends PureComponent {
         ...token,
       },
     });
-    axios
-      .post('https://api.totolelanzhou.com/admin/export_users', {
-        ...token,
-      })
-      .then(res => {
-        this.setState({
-          csvData: res.data.data,
-        });
+    axios({
+      method: 'get',
+      url: 'https://api.totolelanzhou.com/admin/export_users',
+      params: { ...token },
+      adapter: jsonpAdapter,
+    }).then(res => {
+      this.setState({
+        csvData: res.data.data,
       });
+    });
   }
 
   handleFormSubmit = value => {

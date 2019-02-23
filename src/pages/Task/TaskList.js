@@ -8,6 +8,7 @@ import { CSVLink } from 'react-csv';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import Result from '@/components/Result';
 import axios from 'axios';
+import jsonpAdapter from 'axios-jsonp';
 
 import styles from './TaskList.less';
 
@@ -48,15 +49,16 @@ class TaskList extends PureComponent {
       },
     });
 
-    axios
-      .post('https://api.totolelanzhou.com/admin/export_tasks', {
-        ...token,
-      })
-      .then(res => {
-        this.setState({
-          csvData: res.data.data,
-        });
+    axios({
+      method: 'get',
+      url: 'https://api.totolelanzhou.com/admin/export_tasks',
+      params: { ...token },
+      adapter: jsonpAdapter,
+    }).then(res => {
+      this.setState({
+        csvData: res.data.data,
       });
+    });
   }
 
   showModal = () => {
