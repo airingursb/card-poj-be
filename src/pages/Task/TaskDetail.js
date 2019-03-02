@@ -103,10 +103,11 @@ class TaskDetail extends Component {
           <span style={{ marginRight: 10 }}>
             拒绝原因：
             <Select value={refuseInfo} style={{ width: 120 }} onChange={this.handleSelect}>
-              <Select.Option value="1">1</Select.Option>
-              <Select.Option value="2">2</Select.Option>
-              <Select.Option value="3">3</Select.Option>
-              <Select.Option value="4">4</Select.Option>
+              <Select.Option value="陈列排面数不合格">陈列排面数不合格</Select.Option>
+              <Select.Option value="陈列品项数量不合格">陈列品项数量不合格</Select.Option>
+              <Select.Option value="照片拍摄不清楚">照片拍摄不清楚</Select.Option>
+              <Select.Option value="必备陈列品项不合格">必备陈列品项不合格</Select.Option>
+              <Select.Option value="缺少广宣物料">缺少广宣物料</Select.Option>
             </Select>
           </span>
         )}
