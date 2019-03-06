@@ -6,6 +6,7 @@ import { Button, Radio, Row, Col, Card, Badge, Table, Tag, Form, Divider, Icon }
 import DescriptionList from '@/components/DescriptionList';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import moment from 'moment';
+import Link from 'umi/link';
 
 import styles from './Profile.less';
 
@@ -187,7 +188,7 @@ class AdvancedProfile extends Component {
         title: '任务 ID',
         dataIndex: 'id',
         key: 'id',
-        render: id => <a href={`/task/detail?id=${id}`}>{id}</a>,
+        render: id => <Link to={`/task/detail?id=${id}`}>{id}</Link>,
       },
       {
         title: '执行人',
