@@ -89,6 +89,39 @@ export default [
             ],
           },
           {
+            path: '/task/list_todo',
+            name: 'tasklisttodo',
+            component: './Task/TaskListToDo',
+            routes: [
+              {
+                path: '/task/detail',
+                component: './Task/TaskDetail',
+              },
+            ],
+          },
+          {
+            path: '/task/list_ok',
+            name: 'tasklistok',
+            component: './Task/TaskListOk',
+            routes: [
+              {
+                path: '/task/detail',
+                component: './Task/TaskDetail',
+              },
+            ],
+          },
+          {
+            path: '/task/list_refuse',
+            name: 'tasklistrefuse',
+            component: './Task/TaskListRefuse',
+            routes: [
+              {
+                path: '/task/detail',
+                component: './Task/TaskDetail',
+              },
+            ],
+          },
+          {
             path: '/task/detail',
             component: './Task/TaskDetail',
           },

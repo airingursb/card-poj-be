@@ -3,7 +3,6 @@ import moment from 'moment';
 import { connect } from 'dva';
 import { List, Card, Badge, Button, Avatar, Modal, Form, DatePicker, Select } from 'antd';
 import Link from 'umi/link';
-import { CSVLink } from 'react-csv';
 
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import Result from '@/components/Result';
@@ -28,11 +27,6 @@ class TaskList extends PureComponent {
     visible: false,
     done: false,
     token: JSON.parse(localStorage.getItem('card-poj-token')),
-    csvData: [
-      { firstname: 'Ahmed', lastname: 'Tomi', email: 'ah@smthing.co.com' },
-      { firstname: 'Raed', lastname: 'Labes', email: 'rl@smthing.co.com' },
-    ],
-    showExport: false,
     total: 10,
   };
 
@@ -49,15 +43,15 @@ class TaskList extends PureComponent {
       payload: {
         ...token,
         pageSize: 10,
-        pageIndex: +localStorage.getItem('page-task1') || 0,
-        status: -1,
+        pageIndex: +localStorage.getItem('page-task2') || 0,
+        status: 1,
       },
     });
 
     axios({
       method: 'get',
       url: 'https://api.totolelanzhou.com/admin/tasks_count',
-      params: { ...token, status: -1 },
+      params: { ...token, status: 1 },
       adapter: jsonpAdapter,
     }).then(res => {
       this.setState({
@@ -77,22 +71,6 @@ class TaskList extends PureComponent {
     this.setState({
       visible: true,
       current: item,
-    });
-  };
-
-  handleExport = () => {
-    const { token } = this.state;
-    setTimeout(() => {}, 0);
-    axios({
-      method: 'get',
-      url: 'https://api.totolelanzhou.com/admin/export_tasks',
-      params: { ...token },
-      adapter: jsonpAdapter,
-    }).then(res => {
-      this.setState({
-        csvData: res.data.data,
-        showExport: true,
-      });
     });
   };
 
@@ -139,16 +117,7 @@ class TaskList extends PureComponent {
     const {
       form: { getFieldDecorator },
     } = this.props;
-    const { token, visible, done, current = {}, csvData, showExport, total } = this.state;
-
-    const headers = [
-      { label: 'id', key: 'id' },
-      { label: '姓名', key: 'user_id' },
-      { label: '审核状态', key: 'status' },
-      { label: '任务开始时间', key: 'begin_time' },
-      { label: '任务结束时间', key: 'end_time' },
-      { label: '提交时间', key: 'finish_time' },
-    ];
+    const { token, visible, done, current = {}, total } = this.state;
 
     const modalFooter = done
       ? { footer: null, onCancel: this.handleDone }
@@ -156,19 +125,6 @@ class TaskList extends PureComponent {
 
     const extraContent = (
       <div className={styles.extraContent}>
-        <Button type="primary" onClick={this.handleExport}>
-          {showExport ? (
-            <CSVLink
-              data={csvData}
-              headers={headers}
-              filename={'审核信息.csv'} // eslint-disable-line
-            >
-              确定
-            </CSVLink>
-          ) : (
-            '导出成 Excel'
-          )}
-        </Button>
         {/* <RadioGroup
           defaultValue="all"
           onChange={e => {
@@ -299,12 +255,12 @@ class TaskList extends PureComponent {
                       ...token,
                       pageSize: 10,
                       pageIndex: page,
-                      status: -1,
+                      status: 1,
                     },
                   });
                   localStorage.setItem('page-task1', page.toString());
                 },
-                current: +localStorage.getItem('page-task1') || 0,
+                current: +localStorage.getItem('page-task2') || 0,
                 pageSize: 10,
                 total,
                 showQuickJumper: true,
