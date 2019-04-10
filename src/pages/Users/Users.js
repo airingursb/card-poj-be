@@ -25,12 +25,15 @@ const FormItem = Form.Item;
     // eslint-disable-next-line
     console.log(changedValues, allValues);
     const token = JSON.parse(localStorage.getItem('card-poj-token'));
+    localStorage.setItem('user-status', changedValues.status.toString());
     // 模拟查询表单生效
     dispatch({
-      type: 'list/filter',
+      type: 'list/users',
       payload: {
         ...token,
         status: changedValues.status,
+        pageIndex: +localStorage.getItem('page-user'),
+        pageSize: 52,
       },
     });
   },
@@ -42,17 +45,40 @@ class FilterCardList extends PureComponent {
       { firstname: 'Ahmed', lastname: 'Tomi', email: 'ah@smthing.co.com' },
       { firstname: 'Raed', lastname: 'Labes', email: 'rl@smthing.co.com' },
     ],
+    showExport: false,
+    total: 500,
+    status: localStorage.getItem('user-status') || -1,
   };
 
   componentDidMount() {
     const { dispatch } = this.props;
-    const { token } = this.state;
+    const { token, status } = this.state;
     dispatch({
       type: 'list/users',
       payload: {
         ...token,
+        pageIndex: 0,
+        pageSize: 52,
+        status: -1,
       },
     });
+
+    axios({
+      method: 'get',
+      url: 'https://api.totolelanzhou.com/admin/users_count',
+      params: { ...token, status },
+      adapter: jsonpAdapter,
+    }).then(res => {
+      this.setState({
+        total: res.data.data,
+      });
+    });
+  }
+
+  handleExport = () => {
+    const { token } = this.state;
+    setTimeout(() => {}, 0);
+
     axios({
       method: 'get',
       url: 'https://api.totolelanzhou.com/admin/export_users',
@@ -61,9 +87,10 @@ class FilterCardList extends PureComponent {
     }).then(res => {
       this.setState({
         csvData: res.data.data,
+        showExport: true,
       });
     });
-  }
+  };
 
   handleFormSubmit = value => {
     const { dispatch } = this.props;
@@ -93,10 +120,11 @@ class FilterCardList extends PureComponent {
       list: { list },
       loading,
       form,
+      dispatch,
     } = this.props;
     const { getFieldDecorator } = form;
 
-    const { csvData } = this.state;
+    const { csvData, showExport, total, token } = this.state;
 
     const CardInfo = ({ phone, status }) => {
       let mode = '';
@@ -180,6 +208,7 @@ class FilterCardList extends PureComponent {
       { label: '本月完成任务', key: 'task_times' },
     ];
 
+    const { status } = this.state;
     return (
       <PageHeaderWrapper title="搜索列表" content={mainSearch} onTabChange={this.handleTabChange}>
         <div className={styles.filterCardList}>
@@ -210,14 +239,18 @@ class FilterCardList extends PureComponent {
                   </Col>
                   <Col lg={8} md={10} sm={10} xs={24}>
                     <FormItem {...formItemLayout}>
-                      <Button type="primary">
-                        <CSVLink
-                          data={csvData}
-                          headers={headers}
-                          filename={'用户信息.csv'} // eslint-disable-line
-                        >
-                          导出成 Excel
-                        </CSVLink>
+                      <Button type="primary" onClick={this.handleExport}>
+                        {showExport ? (
+                          <CSVLink
+                            data={csvData}
+                            headers={headers}
+                            filename={'用户信息.csv'} // eslint-disable-line
+                          >
+                            确定
+                          </CSVLink>
+                        ) : (
+                          '导出成 Excel'
+                        )}
                       </Button>
                     </FormItem>
                   </Col>
@@ -231,6 +264,24 @@ class FilterCardList extends PureComponent {
             grid={{ gutter: 24, xl: 4, lg: 3, md: 3, sm: 2, xs: 1 }}
             loading={loading}
             dataSource={list}
+            pagination={{
+              onChange: page => {
+                dispatch({
+                  type: 'list/users',
+                  payload: {
+                    ...token,
+                    pageSize: 52,
+                    pageIndex: page,
+                    status,
+                  },
+                });
+                localStorage.setItem('page-user', page.toString());
+              },
+              current: +localStorage.getItem('page-user'),
+              pageSize: 52,
+              total,
+              showQuickJumper: true,
+            }}
             renderItem={item => (
               <Link to={`/users/profile?id=${item.id}`}>
                 <List.Item key={item.id}>
