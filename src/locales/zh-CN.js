@@ -77,6 +77,8 @@ export default {
   'menu.users.shops': '店主列表',
   'menu.message': '通知管理',
   'menu.message.messagelist': '通知列表',
+  'menu.feedback': '反馈管理',
+  'menu.feedback.feedbacklist': '反馈列表',
   'menu.task': '任务管理',
   'menu.task.taskshow': '任务列表',
   'menu.task.tasklist': '审核列表（全部）',

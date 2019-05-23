@@ -66,6 +66,29 @@ export default [
           },
         ],
       },
+      // 反馈管理模块
+      {
+        path: '/feedback',
+        name: 'feedback',
+        icon: 'profile',
+        routes: [
+          {
+            path: '/feedback/list',
+            name: 'feedbacklist',
+            component: './Feedback/FeedbackList',
+            routes: [
+              {
+                path: '/feedback/detail',
+                component: './Feedback/FeedbackDetail',
+              },
+            ],
+          },
+          {
+            path: '/feedback/detail',
+            component: './Feedback/FeedbackDetail',
+          },
+        ],
+      },
       // 任务管理模块
       {
         path: '/task',
