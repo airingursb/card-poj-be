@@ -101,7 +101,7 @@ class FeedbackList extends PureComponent {
       type: 'feedback/delete',
       payload: {
         ...token,
-        message_id: id,
+        feedback_id: id,
       },
     });
   };
@@ -136,7 +136,7 @@ class FeedbackList extends PureComponent {
     const headers = [
       { label: 'id', key: 'id' },
       { label: '姓名', key: 'user_id' },
-      { label: '反馈内容', key: ' content' },
+      { label: '反馈内容', key: 'content' },
       { label: '提交时间', key: 'created_at' },
     ];
 

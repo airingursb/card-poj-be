@@ -281,6 +281,14 @@ export async function getFeedbacks(params) {
   });
 }
 
+// 删除反馈
+export async function deleteFeedback(params) {
+  return request(`${HOST}/admin/delete_feedback`, {
+    method: 'POST',
+    body: params,
+  });
+}
+
 // 发放卡券
 export async function sendCard(params) {
   return request(`${HOST}/admin/send_card`, {

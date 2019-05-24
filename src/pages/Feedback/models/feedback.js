@@ -2,7 +2,7 @@ import {
   editMessage,
   filterTasks,
   getNotice,
-  deleteMessage,
+  deleteFeedback,
   createNotice,
   getFeedbacks,
 } from '@/services/api';
@@ -55,7 +55,7 @@ export default {
       }
     },
     *delete({ payload }, { call, put }) {
-      const response = yield call(deleteMessage, payload);
+      const response = yield call(deleteFeedback, payload);
       if (response.code === 0) {
         message.success('删除成功');
         yield put({
@@ -70,13 +70,13 @@ export default {
     show(state, { payload }) {
       return {
         ...state,
-        messages: payload,
+        feedbacks: payload,
       };
     },
     edit(state, { payload }) {
       return {
         ...state,
-        messages: payload,
+        feedbacks: payload,
       };
     },
   },
