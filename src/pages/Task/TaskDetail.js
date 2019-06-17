@@ -124,7 +124,7 @@ class TaskDetail extends Component {
 
     let statusText = '';
     let statusShow = '';
-    let shopStatus = '';
+    let shopStatus = '未登记';
 
     switch (data && data.user && +data.user.shop_status) {
       case 0:

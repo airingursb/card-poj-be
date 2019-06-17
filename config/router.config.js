@@ -123,6 +123,17 @@ export default [
             ],
           },
           {
+            path: '/task/list_todo_pro',
+            name: 'tasklisttodopro',
+            component: './Task/TaskListToDoPro',
+            routes: [
+              {
+                path: '/task/detail',
+                component: './Task/TaskDetail',
+              },
+            ],
+          },
+          {
             path: '/task/list_ok',
             name: 'tasklistok',
             component: './Task/TaskListOk',

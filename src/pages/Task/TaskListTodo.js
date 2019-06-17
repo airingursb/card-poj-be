@@ -44,14 +44,14 @@ class TaskList extends PureComponent {
         ...token,
         pageSize: 10,
         pageIndex: +localStorage.getItem('page-task2') || 0,
-        status: 1,
+        status: -2,
       },
     });
 
     axios({
       method: 'get',
       url: 'https://api.totolelanzhou.com/admin/tasks_count',
-      params: { ...token, status: 1 },
+      params: { ...token, status: -2 },
       adapter: jsonpAdapter,
     }).then(res => {
       this.setState({
@@ -255,10 +255,10 @@ class TaskList extends PureComponent {
                       ...token,
                       pageSize: 10,
                       pageIndex: page,
-                      status: 1,
+                      status: -2,
                     },
                   });
-                  localStorage.setItem('page-task1', page.toString());
+                  localStorage.setItem('page-task2', page.toString());
                 },
                 current: +localStorage.getItem('page-task2') || 0,
                 pageSize: 10,

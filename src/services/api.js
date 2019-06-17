@@ -1,8 +1,8 @@
 import { stringify } from 'qs';
 import request from '@/utils/request';
 
-const HOST = 'http://localhost:3045';
-// const HOST = 'https://api.totolelanzhou.com'
+// const HOST = 'http://localhost:3045'
+const HOST = 'https://api.totolelanzhou.com';
 
 export async function queryProjectNotice() {
   return request('/api/project/notice');
