@@ -66,7 +66,7 @@ class FeedbackList extends PureComponent {
     setTimeout(() => {}, 0);
     axios({
       method: 'get',
-      url: 'http://localhost:3045/admin/export_feedbacks',
+      url: 'https://api.totolelanzhou.com/admin/export_feedbacks',
       params: { ...token },
       adapter: jsonpAdapter,
     }).then(res => {
