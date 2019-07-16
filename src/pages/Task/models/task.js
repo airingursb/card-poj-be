@@ -6,6 +6,7 @@ import {
   getNotice,
   deleteNotice,
   createNotice,
+  passTasks,
 } from '@/services/api';
 import { message } from 'antd';
 
@@ -75,6 +76,16 @@ export default {
       const response = yield call(deleteNotice, payload);
       if (response.code === 0) {
         message.success('删除成功');
+        yield put({
+          type: 'showNotice',
+          payload: response.data,
+        });
+      }
+    },
+    *passTasks({ payload }, { call, put }) {
+      const response = yield call(passTasks, payload);
+      if (response.code === 0) {
+        message.success('批量审核成功');
         yield put({
           type: 'showNotice',
           payload: response.data,

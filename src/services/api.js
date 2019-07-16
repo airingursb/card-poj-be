@@ -265,6 +265,14 @@ export async function checkTask(params) {
   });
 }
 
+// 批量审核任务
+export async function passTasks(params) {
+  return request(`${HOST}/admin/pass_tasks`, {
+    method: 'POST',
+    body: params,
+  });
+}
+
 // 获取通知
 export async function getMessages(params) {
   return request(`${HOST}/admin/messages`, {

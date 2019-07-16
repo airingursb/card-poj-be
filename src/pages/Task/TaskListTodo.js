@@ -1,7 +1,20 @@
 import React, { PureComponent } from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
-import { List, Card, Badge, Button, Avatar, Modal, Form, DatePicker, Select } from 'antd';
+import {
+  List,
+  Card,
+  Badge,
+  Button,
+  Avatar,
+  Modal,
+  Form,
+  DatePicker,
+  Select,
+  Row,
+  Col,
+  Checkbox,
+} from 'antd';
 import Link from 'umi/link';
 
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
@@ -28,6 +41,8 @@ class TaskList extends PureComponent {
     done: false,
     token: JSON.parse(localStorage.getItem('card-poj-token')),
     total: 10,
+    selected: [],
+    allSelected: false,
   };
 
   formLayout = {
@@ -108,6 +123,68 @@ class TaskList extends PureComponent {
     });
   };
 
+  handleAllSelect = () => {
+    let {
+      task: { list },
+    } = this.props;
+    let { allSelected } = this.state;
+
+    list = list.map(val => val.id);
+
+    allSelected = !allSelected;
+    this.setState({
+      selected: allSelected ? list : [],
+      allSelected,
+    });
+  };
+
+  handleSelect = selected => {
+    const {
+      task: { list },
+    } = this.props;
+
+    this.setState({
+      selected,
+      allSelected: selected.length === list.length,
+    });
+  };
+
+  handleConfirmSelected = async () => {
+    const { selected, token } = this.state;
+    const {
+      task: { list },
+      dispatch,
+    } = this.props;
+
+    if (!selected.length) return;
+
+    const users = selected.map(val => list.find(item => item.id === val).user.id);
+
+    await dispatch({
+      type: 'task/passTasks',
+      payload: {
+        ...token,
+        tasks: selected,
+        users,
+      },
+    });
+
+    await dispatch({
+      type: 'task/fetch',
+      payload: {
+        ...token,
+        pageSize: 10,
+        pageIndex: +localStorage.getItem('page-task2') || 0,
+        status: -2,
+      },
+    });
+
+    this.setState({
+      selected: [],
+      allSelected: false,
+    });
+  };
+
   render() {
     const {
       task: { list },
@@ -117,7 +194,7 @@ class TaskList extends PureComponent {
     const {
       form: { getFieldDecorator },
     } = this.props;
-    const { token, visible, done, current = {}, total } = this.state;
+    const { token, visible, done, current = {}, total, allSelected, selected } = this.state;
 
     const modalFooter = done
       ? { footer: null, onCancel: this.handleDone }
@@ -243,52 +320,90 @@ class TaskList extends PureComponent {
             bodyStyle={{ padding: '0 32px 40px 32px' }}
             extra={extraContent}
           >
-            <List
-              size="large"
-              rowKey="id"
-              loading={loading}
-              pagination={{
-                onChange: page => {
-                  dispatch({
-                    type: 'task/fetch',
-                    payload: {
-                      ...token,
-                      pageSize: 10,
-                      pageIndex: page,
-                      status: -2,
-                    },
-                  });
-                  localStorage.setItem('page-task2', page.toString());
-                },
-                current: +localStorage.getItem('page-task2') || 0,
-                pageSize: 10,
-                total,
-                showQuickJumper: true,
-              }}
-              dataSource={list}
-              renderItem={item => (
-                <List.Item actions={[<Link to={`/task/detail/?id=${item.id}`}>审核</Link>]}>
-                  <List.Item.Meta
-                    avatar={
-                      <Avatar
-                        src={
-                          item.user.avatar
-                            ? item.user.avatar
-                            : 'https://gw.alipayobjects.com/zos/rmsportal/nxkuOJlFJuAUhzlMTCEe.png'
-                        }
-                        shape="square"
-                        size="large"
-                      />
-                    }
-                    title={
-                      <Link to={`/task/detail/?id=${item.id}`}>{item.user.name} 的每月任务</Link>
-                    }
-                    description={`联系方式：${item.user.phone ? item.user.phone : '暂无'}`}
-                  />
-                  <ListContent data={item} />
-                </List.Item>
-              )}
-            />
+            <Row type="flex" justify="center" align="middle">
+              <Col span={3}>
+                <Checkbox checked={allSelected} onChange={this.handleAllSelect}>
+                  全选
+                </Checkbox>
+              </Col>
+              <Col span={4}>
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    this.handleConfirmSelected(true);
+                  }}
+                >
+                  通过审核
+                </Button>
+              </Col>
+              <Col span={4}>
+                <Button
+                  type="danger"
+                  onClick={() => {
+                    this.handleConfirmSelected(false);
+                  }}
+                >
+                  不通过审核
+                </Button>
+              </Col>
+            </Row>
+            <Checkbox.Group style={{ width: '100%' }} value={selected} onChange={this.handleSelect}>
+              <List
+                size="large"
+                rowKey="id"
+                loading={loading}
+                pagination={{
+                  onChange: page => {
+                    dispatch({
+                      type: 'task/fetch',
+                      payload: {
+                        ...token,
+                        pageSize: 10,
+                        pageIndex: page,
+                        status: -2,
+                      },
+                    });
+                    localStorage.setItem('page-task2', page.toString());
+                  },
+                  current: +localStorage.getItem('page-task2') || 0,
+                  pageSize: 10,
+                  total,
+                  showQuickJumper: true,
+                }}
+                dataSource={list}
+                renderItem={item => (
+                  <Row type="flex" justify="start" align="middle">
+                    <Col span={1}>
+                      <Checkbox value={item.id} />
+                    </Col>
+                    <Col span={23}>
+                      <List.Item actions={[<Link to={`/task/detail/?id=${item.id}`}>审核</Link>]}>
+                        <List.Item.Meta
+                          avatar={
+                            <Avatar
+                              src={
+                                item.user.avatar
+                                  ? item.user.avatar
+                                  : 'https://gw.alipayobjects.com/zos/rmsportal/nxkuOJlFJuAUhzlMTCEe.png'
+                              }
+                              shape="square"
+                              size="large"
+                            />
+                          }
+                          title={
+                            <Link to={`/task/detail/?id=${item.id}`}>
+                              {item.user.name} 的每月任务
+                            </Link>
+                          }
+                          description={`联系方式：${item.user.phone ? item.user.phone : '暂无'}`}
+                        />
+                        <ListContent data={item} />
+                      </List.Item>
+                    </Col>
+                  </Row>
+                )}
+              />
+            </Checkbox.Group>
           </Card>
         </div>
         <Modal
