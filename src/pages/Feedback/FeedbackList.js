@@ -23,6 +23,9 @@ class FeedbackList extends PureComponent {
     token: JSON.parse(localStorage.getItem('card-poj-token')),
     csvData: [],
     showExport: false,
+    currentPage: 1,
+    pageSize: 10,
+    list: [],
   };
 
   formLayout = {
@@ -30,16 +33,34 @@ class FeedbackList extends PureComponent {
     wrapperCol: { span: 13 },
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     const { dispatch } = this.props;
     const token = JSON.parse(localStorage.getItem('card-poj-token'));
-    dispatch({
+    await dispatch({
       type: 'feedback/fetch',
       payload: {
         ...token,
       },
     });
+
+    this.setPageData();
   }
+
+  setPageData = page => {
+    const { pageSize } = this.state;
+    let { currentPage } = this.state;
+    const {
+      feedback: { feedbacks },
+    } = this.props;
+
+    if (page) {
+      currentPage = page;
+    }
+
+    const list = feedbacks.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+    this.setState({ list });
+  };
 
   showModal = () => {
     this.setState({
@@ -112,7 +133,7 @@ class FeedbackList extends PureComponent {
       loading,
     } = this.props;
 
-    const { showExport, csvData } = this.state;
+    const { showExport, csvData, list, currentPage, pageSize } = this.state;
 
     const deleteConfirm = currentItem => {
       Modal.confirm({
@@ -167,7 +188,17 @@ class FeedbackList extends PureComponent {
               size="large"
               rowKey="id"
               loading={loading}
-              dataSource={feedbacks}
+              pagination={{
+                onChange: page => {
+                  this.setState({ currentPage: page });
+                  this.setPageData(page);
+                },
+                current: currentPage,
+                pageSize,
+                total: feedbacks ? feedbacks.length : 10,
+                showQuickJumper: true,
+              }}
+              dataSource={list}
               renderItem={item => (
                 <List.Item
                   actions={[
