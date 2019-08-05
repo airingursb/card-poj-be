@@ -161,6 +161,19 @@ export default [
           },
         ],
       },
+      // 卡券模块
+      {
+        path: '/card',
+        name: 'card',
+        icon: 'profile',
+        routes: [
+          {
+            path: '/card/config',
+            name: 'cardconfig',
+            component: './Card/Card',
+          },
+        ],
+      },
       {
         name: 'exception',
         icon: 'warning',

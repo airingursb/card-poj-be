@@ -304,3 +304,19 @@ export async function sendCard(params) {
     body: params,
   });
 }
+
+// 获取卡券
+export async function getTicket(params) {
+  return request(`${HOST}/admin/get_ticket`, {
+    method: 'POST',
+    body: params,
+  });
+}
+
+// 配置卡券
+export async function updateTicket(params) {
+  return request(`${HOST}/admin/update_ticket`, {
+    method: 'POST',
+    body: params,
+  });
+}

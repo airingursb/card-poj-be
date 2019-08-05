@@ -88,6 +88,8 @@ export default {
   'menu.task.tasklistrefuse': '审核列表（驳回）',
   'menu.cards': '卡券管理',
   'menu.cards.cardlist': '卡券列表',
+  'menu.card': '卡券管理',
+  'menu.card.cardconfig': '卡券配置',
   'menu.dashboard': 'Dashboard',
   'menu.dashboard.analysis': '分析页',
   'menu.dashboard.monitor': '监控页',
