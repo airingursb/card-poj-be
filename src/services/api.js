@@ -241,6 +241,14 @@ export async function deleteMessage(params) {
   });
 }
 
+// 公众号模板信息推送
+export async function mpMessage(params) {
+  return request(`${HOST}/admin/mp_message`, {
+    method: 'POST',
+    body: params,
+  });
+}
+
 // 获取任务列表
 export async function getNotice(params) {
   return request(`${HOST}/admin/notice_list`, {

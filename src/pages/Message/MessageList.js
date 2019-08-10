@@ -83,6 +83,10 @@ class MessageList extends PureComponent {
         type: 'message/submit',
         payload: { id, ...token, ...fieldsValue },
       });
+      dispatch({
+        type: 'message/notice',
+        payload: { ...token, ...fieldsValue },
+      });
     });
   };
 

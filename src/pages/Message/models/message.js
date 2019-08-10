@@ -1,6 +1,7 @@
 import {
   getMessages,
   editMessage,
+  mpMessage,
   filterTasks,
   getNotice,
   deleteMessage,
@@ -63,6 +64,9 @@ export default {
           payload: response.data,
         });
       }
+    },
+    *notice({ payload }, { call }) {
+      yield call(mpMessage, payload);
     },
   },
 
