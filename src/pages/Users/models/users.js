@@ -1,4 +1,4 @@
-import { checkUser, getUser } from '@/services/api';
+import { checkUser, getUser, updateShopStatus } from '@/services/api';
 import { message } from 'antd';
 
 export default {
@@ -16,6 +16,18 @@ export default {
           payload: {
             user: response.data.user,
             tasks: response.data.tasks,
+          },
+        });
+      }
+    },
+    *modify({ payload }, { call, put }) {
+      const response = yield call(updateShopStatus, payload);
+      if (response.code === 0) {
+        message.success('修改成功');
+        yield put({
+          type: 'update',
+          payload: {
+            user: response.data.user,
           },
         });
       }
@@ -40,6 +52,12 @@ export default {
         ...state,
         ...payload.user,
         tasks: payload.tasks,
+      };
+    },
+    update(state, { payload }) {
+      return {
+        ...state,
+        ...payload.user,
       };
     },
   },

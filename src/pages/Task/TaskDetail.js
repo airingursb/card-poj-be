@@ -133,6 +133,18 @@ class TaskDetail extends Component {
       case 1:
         shopStatus = '标准门店';
         break;
+      case 3:
+        shopStatus = '万元户黄色风暴网点';
+        break;
+      case 4:
+        shopStatus = '银牌合作伙伴';
+        break;
+      case 5:
+        shopStatus = '金牌合作伙伴';
+        break;
+      case 6:
+        shopStatus = '战略联盟合作伙伴';
+        break;
       default:
         break;
     }
@@ -286,12 +298,34 @@ class TaskDetail extends Component {
                 }
               />
             </Description>
+          </DescriptionList>
+          <DescriptionList style={{ marginBottom: 24 }}>
             <Description term="近景图">
               <img
                 style={{ height: '200px' }}
                 alt=""
                 src={
-                  (data && data.pic_short) ||
+                  (data && data.pic_short_2) ||
+                  'https://gw.alipayobjects.com/zos/rmsportal/nxkuOJlFJuAUhzlMTCEe.png'
+                }
+              />
+            </Description>
+            <Description>
+              <img
+                style={{ height: '200px' }}
+                alt=""
+                src={
+                  (data && data.pic_short_2) ||
+                  'https://gw.alipayobjects.com/zos/rmsportal/nxkuOJlFJuAUhzlMTCEe.png'
+                }
+              />
+            </Description>
+            <Description>
+              <img
+                style={{ height: '200px' }}
+                alt=""
+                src={
+                  (data && data.pic_short_3) ||
                   'https://gw.alipayobjects.com/zos/rmsportal/nxkuOJlFJuAUhzlMTCEe.png'
                 }
               />

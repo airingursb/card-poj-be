@@ -59,7 +59,7 @@ class TaskList extends PureComponent {
         ...token,
         pageSize: 10,
         pageIndex: +localStorage.getItem('page-task2') || 0,
-        status: 2,
+        status: 4,
       },
     });
 
@@ -175,7 +175,7 @@ class TaskList extends PureComponent {
         ...token,
         pageSize: 10,
         pageIndex: +localStorage.getItem('page-task2') || 0,
-        status: 2,
+        status: 4,
       },
     });
 
@@ -360,7 +360,7 @@ class TaskList extends PureComponent {
                         ...token,
                         pageSize: 10,
                         pageIndex: page,
-                        status: 2,
+                        status: 4,
                       },
                     });
                     localStorage.setItem('page-task2', page.toString());

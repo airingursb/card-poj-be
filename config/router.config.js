@@ -134,6 +134,50 @@ export default [
             ],
           },
           {
+            path: '/task/list_todo_thousand',
+            name: 'tasklisttodothousand',
+            component: './Task/TaskListToDoThousand',
+            routes: [
+              {
+                path: '/task/detail',
+                component: './Task/TaskDetail',
+              },
+            ],
+          },
+          {
+            path: '/task/list_todo_sliver',
+            name: 'tasklisttodosliver',
+            component: './Task/TaskListToDoSliver',
+            routes: [
+              {
+                path: '/task/detail',
+                component: './Task/TaskDetail',
+              },
+            ],
+          },
+          {
+            path: '/task/list_todo_golden',
+            name: 'tasklisttodogolden',
+            component: './Task/TaskListToDoGolden',
+            routes: [
+              {
+                path: '/task/detail',
+                component: './Task/TaskDetail',
+              },
+            ],
+          },
+          {
+            path: '/task/list_todo_partner',
+            name: 'tasklisttodopartner',
+            component: './Task/TaskListToDoPartner',
+            routes: [
+              {
+                path: '/task/detail',
+                component: './Task/TaskDetail',
+              },
+            ],
+          },
+          {
             path: '/task/list_ok',
             name: 'tasklistok',
             component: './Task/TaskListOk',

@@ -1,8 +1,8 @@
 import { stringify } from 'qs';
 import request from '@/utils/request';
 
-// const HOST = 'http://localhost:3045'
-const HOST = 'https://api.totolelanzhou.com';
+const HOST = 'http://localhost:3045';
+// const HOST = 'https://api.totolelanzhou.com';
 
 export async function queryProjectNotice() {
   return request('/api/project/notice');
@@ -175,6 +175,14 @@ export async function getUser(params) {
 // 审核用户
 export async function checkUser(params) {
   return request(`${HOST}/admin/check_user`, {
+    method: 'POST',
+    body: params,
+  });
+}
+
+// 修改用户商店类型
+export async function updateShopStatus(params) {
+  return request(`${HOST}/admin/update_shop_status`, {
     method: 'POST',
     body: params,
   });

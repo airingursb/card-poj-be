@@ -1,4 +1,5 @@
 import { getTicket, updateTicket } from '@/services/api';
+import { message } from 'antd';
 
 export default {
   namespace: 'ticket',
@@ -20,6 +21,7 @@ export default {
     *update({ payload }, { call, put }) {
       const response = yield call(updateTicket, payload);
       if (response.code === 0) {
+        message.success('修改成功');
         yield put({
           type: 'show',
           payload: {
@@ -33,10 +35,16 @@ export default {
   reducers: {
     show(state, { payload }) {
       const { tickets } = payload;
+      const keys = ['card_50', 'card_200', 'card_400', 'card_600', 'card_1000', 'card_1200'];
+      const tempObj = {};
+
+      tickets.forEach(val => {
+        tempObj[keys[val.status - 1]] = val;
+      });
+
       return {
         ...state,
-        card_50: tickets.filter(val => val.status === 2)[0],
-        card_200: tickets.filter(val => val.status === 1)[0],
+        ...tempObj,
       };
     },
   },
