@@ -165,28 +165,28 @@ class AdvancedProfile extends Component {
       case 100:
         statusText = (
           <span style={{ color: '#096dd9' }}>
-            <Icon type="exclamation-circle" theme="outlined" /> 待审核{' '}
+            <Icon type="exclamation-circle" theme="outlined" /> 待审核
           </span>
         );
         break;
       case 201:
         statusText = (
           <span style={{ color: '#52c41a' }}>
-            <Icon type="check-circle" theme="outlined" /> 认证店主{' '}
+            <Icon type="check-circle" theme="outlined" /> 认证店主
           </span>
         );
         break;
       case 202:
         statusText = (
           <span style={{ color: '#08979c' }}>
-            <Icon type="check-circle" theme="outlined" /> 认证游客{' '}
+            <Icon type="check-circle" theme="outlined" /> 认证游客
           </span>
         );
         break;
       case 400:
         statusText = (
           <span style={{ color: 'red' }}>
-            <Icon type="close-circle" theme="outlined" /> 审核驳回{' '}
+            <Icon type="close-circle" theme="outlined" /> 审核驳回
           </span>
         );
         break;
@@ -196,7 +196,6 @@ class AdvancedProfile extends Component {
 
     const action = (
       <Form onSubmit={this.handleSubmit}>
-        {' '}
         {getFieldDecorator('status', {
           rules: [
             {
@@ -206,23 +205,23 @@ class AdvancedProfile extends Component {
           ],
         })(
           <Radio.Group initialValue={users && users.status} buttonStyle="solid">
-            <Radio.Button value="400"> 驳回 </Radio.Button>{' '}
-            <Radio.Button value="201"> 店主 </Radio.Button>{' '}
-            <Radio.Button value="202"> 游客 </Radio.Button>{' '}
+            <Radio.Button value="400"> 驳回 </Radio.Button>
+            <Radio.Button value="201"> 店主 </Radio.Button>
+            <Radio.Button value="202"> 游客 </Radio.Button>
           </Radio.Group>
-        )}{' '}
-        <Divider type="vertical" style={{ margin: '0 16px' }} />{' '}
+        )}
+        <Divider type="vertical" style={{ margin: '0 16px' }} />
         <Button type="primary" htmlType="submit" loading={submitting}>
-          提交{' '}
-        </Button>{' '}
+          提交
+        </Button>
       </Form>
     );
     const extra = (
       <Row>
         <Col xs={24} sm={12}>
-          <div className={styles.textSecondary}> 状态 </div>{' '}
-          <div className={styles.heading}> {statusText} </div>{' '}
-        </Col>{' '}
+          <div className={styles.textSecondary}> 状态 </div>
+          <div className={styles.heading}> {statusText} </div>
+        </Col>
       </Row>
     );
 
@@ -239,7 +238,7 @@ class AdvancedProfile extends Component {
         key: 'name',
         render: () => (
           <Tag color="blue" key={Math.random}>
-            <a href={`/users/profile?id=${users.id}`}> {users.name} </a>{' '}
+            <a href={`/users/profile?id=${users.id}`}> {users.name} </a>
           </Tag>
         ),
       },
@@ -293,27 +292,27 @@ class AdvancedProfile extends Component {
 
     const description = (
       <DescriptionList className={styles.headerList} size="small" col="2">
-        <Description term="联系方式"> {users.phone} </Description>{' '}
+        <Description term="联系方式"> {users.phone} </Description>
         <Description term="门店类型">
           <Select style={{ width: 180 }} value={shopStatus} onChange={this.handleShopStatus}>
-            <Option value="1"> 标准网点 </Option> <Option value="0"> 黄色风暴网点 </Option>{' '}
-            <Option value="3"> 万元户黄色风暴网点 </Option>{' '}
-            <Option value="4"> 银牌合作伙伴 </Option> <Option value="5"> 金牌合作伙伴 </Option>{' '}
-            <Option value="6"> 战略联盟合作伙伴 </Option>{' '}
-          </Select>{' '}
-        </Description>{' '}
+            <Option value="1"> 标准网点 </Option>
+            <Option value="0"> 黄色风暴网点 </Option>
+            <Option value="3"> 万元户黄色风暴网点 </Option>
+            <Option value="4"> 银牌合作伙伴 </Option>
+            <Option value="5"> 金牌合作伙伴 </Option>
+            <Option value="6"> 战略联盟合作伙伴 </Option>
+          </Select>
+        </Description>
         <Description term="创建时间">
-          {' '}
-          {users.created_at && users.created_at.replace('T', ' ').replace('.000Z', '')}{' '}
-        </Description>{' '}
+          {users.created_at && users.created_at.replace('T', ' ').replace('.000Z', '')}
+        </Description>
         <Description term="用户 id">
-          <a href=""> {users.id} </a>{' '}
-        </Description>{' '}
+          <a href=""> {users.id} </a>
+        </Description>
         <Description term="更新日期">
-          {' '}
-          {users.updated_at && users.updated_at.replace('T', ' ').replace('.000Z', '')}{' '}
-        </Description>{' '}
-        <Description term="本月卡券"> {cardStatus} </Description>{' '}
+          {users.updated_at && users.updated_at.replace('T', ' ').replace('.000Z', '')}
+        </Description>
+        <Description term="本月卡券"> {cardStatus} </Description>
       </DescriptionList>
     );
 
@@ -334,15 +333,14 @@ class AdvancedProfile extends Component {
       >
         <Card title="店铺信息" style={{ marginBottom: 24 }} bordered={false}>
           <DescriptionList style={{ marginBottom: 24 }}>
-            <Description term="用户姓名"> {users.name} </Description>{' '}
-            <Description term="店铺名"> {users.shop_name} </Description>{' '}
-            <Description term="店铺类别"> {shopStatus} </Description>{' '}
-            <Description term="联系方式"> {users.phone} </Description>{' '}
-            <Description term="店铺地址"> {users.shop_address} </Description>{' '}
-          </DescriptionList>{' '}
-          <Divider style={{ margin: '16px 0' }} />{' '}
+            <Description term="用户姓名"> {users.name} </Description>
+            <Description term="店铺名"> {users.shop_name} </Description>
+            <Description term="店铺类别"> {shopStatus} </Description>
+            <Description term="联系方式"> {users.phone} </Description>
+            <Description term="店铺地址"> {users.shop_address} </Description>
+          </DescriptionList>
+          <Divider style={{ margin: '16px 0' }} />
           <Description term="营业执照">
-            {' '}
             {(users.shop_pic && (
               <img
                 style={{ height: '200px' }}
@@ -353,13 +351,12 @@ class AdvancedProfile extends Component {
                 }
               />
             )) ||
-              '未登记'}{' '}
-          </Description>{' '}
-        </Card>{' '}
+              '未登记'}
+          </Description>
+        </Card>
         <Card title="任务列表" style={{ marginBottom: 24 }} bordered={false}>
-          {' '}
-          {contentList[operationkey]}{' '}
-        </Card>{' '}
+          {contentList[operationkey]}
+        </Card>
       </PageHeaderWrapper>
     );
   }
