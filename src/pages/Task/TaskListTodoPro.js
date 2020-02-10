@@ -59,7 +59,7 @@ class TaskList extends PureComponent {
         ...token,
         pageSize: 10,
         pageIndex: +localStorage.getItem('page-task2-pro') || 0,
-        status: 1,
+        status: 0,
       },
     });
 
