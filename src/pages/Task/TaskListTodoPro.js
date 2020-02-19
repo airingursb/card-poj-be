@@ -66,7 +66,7 @@ class TaskList extends PureComponent {
     axios({
       method: 'get',
       url: 'https://api.totolelanzhou.com/admin/tasks_count',
-      params: { ...token, status: 1 },
+      params: { ...token, status: -3 },
       adapter: jsonpAdapter,
     }).then(res => {
       this.setState({
