@@ -35,7 +35,7 @@ export default {
   reducers: {
     show(state, { payload }) {
       const { tickets } = payload;
-      const keys = ['card_50', 'card_200', 'card_400', 'card_600', 'card_1000', 'card_1200'];
+      const keys = ['card_200', 'card_50', 'card_400', 'card_600', 'card_1000', 'card_1200'];
       const tempObj = {};
 
       tickets.forEach(val => {
