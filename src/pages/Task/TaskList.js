@@ -44,13 +44,15 @@ class TaskList extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     const { token } = this.state;
+    const page = +localStorage.getItem('page-task1');
     dispatch({
       type: 'task/fetch',
       payload: {
         ...token,
         pageSize: 10,
-        pageIndex: +localStorage.getItem('page-task1') || 0,
+        pageIndex: page ? page - 1 : 0,
         status: -1,
+        shop_status: -1,
       },
     });
 
@@ -299,13 +301,14 @@ class TaskList extends PureComponent {
                     payload: {
                       ...token,
                       pageSize: 10,
-                      pageIndex: page,
+                      pageIndex: page - 1,
                       status: -1,
+                      shop_status: -1,
                     },
                   });
                   localStorage.setItem('page-task1', page.toString());
                 },
-                current: +localStorage.getItem('page-task1') || 0,
+                current: +localStorage.getItem('page-task1') || 1,
                 pageSize: 10,
                 total,
                 showQuickJumper: true,
