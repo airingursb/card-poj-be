@@ -200,6 +200,11 @@ export async function getTasks(params) {
   });
 }
 
+// 获取列表数量
+export async function countTasks(params) {
+  return request(`${HOST}/admin/tasks_count?${stringify(params)}`);
+}
+
 // 过滤审核列表
 export async function filterTasks(params) {
   return request(`${HOST}/admin/filter_task_by_status`, {

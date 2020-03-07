@@ -56,14 +56,16 @@ class TaskList extends PureComponent {
       },
     });
 
-    axios({
-      method: 'get',
-      url: 'https://api.totolelanzhou.com/admin/tasks_count',
-      params: { ...token, status: -1 },
-      adapter: jsonpAdapter,
-    }).then(res => {
+    dispatch({
+      type: 'task/count',
+      payload: {
+        ...token,
+        status: -1,
+        shop_status: -1,
+      },
+    }).then(total => {
       this.setState({
-        total: res.data.data,
+        total,
       });
     });
   }

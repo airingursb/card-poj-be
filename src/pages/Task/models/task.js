@@ -7,6 +7,7 @@ import {
   deleteNotice,
   createNotice,
   passTasks,
+  countTasks,
 } from '@/services/api';
 import { message } from 'antd';
 
@@ -91,6 +92,10 @@ export default {
           payload: response.data,
         });
       }
+    },
+    *count({ payload }, { call }) {
+      const response = yield call(countTasks, payload);
+      return response.code === 0 ? response.data : 0;
     },
   },
 

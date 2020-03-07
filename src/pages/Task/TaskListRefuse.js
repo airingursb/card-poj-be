@@ -6,8 +6,6 @@ import Link from 'umi/link';
 
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import Result from '@/components/Result';
-import axios from 'axios';
-import jsonpAdapter from 'axios-jsonp';
 
 import styles from './TaskList.less';
 
@@ -51,14 +49,16 @@ class TaskList extends PureComponent {
       },
     });
 
-    axios({
-      method: 'get',
-      url: 'https://api.totolelanzhou.com/admin/tasks_count',
-      params: { ...token, status: 3 },
-      adapter: jsonpAdapter,
-    }).then(res => {
+    dispatch({
+      type: 'task/count',
+      payload: {
+        ...token,
+        status: 3,
+        shop_status: -1,
+      },
+    }).then(total => {
       this.setState({
-        total: res.data.data,
+        total,
       });
     });
   }
