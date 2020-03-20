@@ -27,7 +27,8 @@ const links = [
 
 const copyright = (
   <Fragment>
-    Copyright <Icon type="copyright" /> 2018 零熊技术团队出品
+    2018 零熊技术团队出品 Copyright <Icon type="copyright" /> 上海太太乐食品有限公司兰州分公司
+    互联网ICP备案：陇ICP备18004222号-1
   </Fragment>
 );
 
