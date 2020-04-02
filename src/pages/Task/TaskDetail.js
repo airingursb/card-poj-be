@@ -300,7 +300,7 @@ class TaskDetail extends Component {
             </Description>
           </DescriptionList>
           <DescriptionList style={{ marginBottom: 24 }}>
-            <Description term="近景图">
+            <Description term="黄色风暴陈列照片">
               <img
                 style={{ height: '200px' }}
                 alt=""
@@ -310,7 +310,7 @@ class TaskDetail extends Component {
                 }
               />
             </Description>
-            <Description>
+            <Description term="畅销品陈列照片">
               <img
                 style={{ height: '200px' }}
                 alt=""
@@ -320,7 +320,7 @@ class TaskDetail extends Component {
                 }
               />
             </Description>
-            <Description>
+            <Description term="五重奏陈列照片">
               <img
                 style={{ height: '200px' }}
                 alt=""

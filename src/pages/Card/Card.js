@@ -77,94 +77,94 @@ class FilterCardList extends PureComponent {
       <PageHeaderWrapper>
         <Row type="flex" align="middle" className={styles.row}>
           <Col span={4} className={styles.title}>
-            标准网点{' '}
-          </Col>{' '}
+            标准网点
+          </Col>
           <Col span={9}>
-            <div>当前卡券： {card50 ? card50.card_id : ''} </div>{' '}
+            <div>当前卡券： {card50 ? card50.card_id : ''} </div>
             <div>
               <Input.Search
                 placeholder="请输入卡劵ID"
                 enterButton="确定"
                 onSearch={this.handleCard50}
-              />{' '}
-            </div>{' '}
-          </Col>{' '}
-        </Row>{' '}
+              />
+            </div>
+          </Col>
+        </Row>
         <Row type="flex" align="middle" className={styles.row}>
           <Col span={4} className={styles.title}>
-            黄色风暴网点{' '}
-          </Col>{' '}
+            黄色风暴网点
+          </Col>
           <Col span={9}>
-            <div>当前卡券： {card200 ? card200.card_id : ''} </div>{' '}
+            <div>当前卡券： {card200 ? card200.card_id : ''} </div>
             <div>
               <Input.Search
                 placeholder="请输入卡劵ID"
                 enterButton="确定"
                 onSearch={this.handleCard200}
-              />{' '}
-            </div>{' '}
-          </Col>{' '}
-        </Row>{' '}
+              />
+            </div>
+          </Col>
+        </Row>
         <Row type="flex" align="middle" className={styles.row}>
           <Col span={4} className={styles.title}>
-            万元户黄色风暴网点{' '}
-          </Col>{' '}
+            万元户黄色风暴网点
+          </Col>
           <Col span={9}>
-            <div>当前卡券： {card400 ? card400.card_id : ''} </div>{' '}
+            <div>当前卡券： {card400 ? card400.card_id : ''} </div>
             <div>
               <Input.Search
                 placeholder="请输入卡劵ID"
                 enterButton="确定"
                 onSearch={this.handleCard400}
-              />{' '}
-            </div>{' '}
-          </Col>{' '}
-        </Row>{' '}
+              />
+            </div>
+          </Col>
+        </Row>
         <Row type="flex" align="middle" className={styles.row}>
           <Col span={4} className={styles.title}>
-            银牌合作伙伴{' '}
-          </Col>{' '}
+            银牌合作伙伴
+          </Col>
           <Col span={9}>
-            <div>当前卡券： {card600 ? card600.card_id : ''} </div>{' '}
+            <div>当前卡券： {card600 ? card600.card_id : ''} </div>
             <div>
               <Input.Search
                 placeholder="请输入卡劵ID"
                 enterButton="确定"
                 onSearch={this.handleCard600}
-              />{' '}
-            </div>{' '}
-          </Col>{' '}
-        </Row>{' '}
+              />
+            </div>
+          </Col>
+        </Row>
         <Row type="flex" align="middle" className={styles.row}>
           <Col span={4} className={styles.title}>
-            金牌合作伙伴{' '}
-          </Col>{' '}
+            金牌合作伙伴
+          </Col>
           <Col span={9}>
-            <div>当前卡券： {card1000 ? card1000.card_id : ''} </div>{' '}
+            <div>当前卡券： {card1000 ? card1000.card_id : ''} </div>
             <div>
               <Input.Search
                 placeholder="请输入卡劵ID"
                 enterButton="确定"
                 onSearch={this.handleCard1000}
-              />{' '}
-            </div>{' '}
-          </Col>{' '}
-        </Row>{' '}
+              />
+            </div>
+          </Col>
+        </Row>
         <Row type="flex" align="middle" className={styles.row}>
           <Col span={4} className={styles.title}>
-            战略联盟合作伙伴{' '}
-          </Col>{' '}
+            战略联盟合作伙伴
+          </Col>
           <Col span={9}>
-            <div>当前卡券： {card1200 ? card1200.card_id : ''} </div>{' '}
+            <div>当前卡券： {card1200 ? card1200.card_id : ''} </div>
             <div>
               <Input.Search
                 placeholder="请输入卡劵ID"
                 enterButton="确定"
                 onSearch={this.handleCard1200}
-              />{' '}
-            </div>{' '}
-          </Col>{' '}
-        </Row>{' '}
+              />
+            </div>
+          </Col>
+        </Row>
       </PageHeaderWrapper>
     );
   }
