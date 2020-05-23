@@ -104,13 +104,14 @@ class FilterCardList extends PureComponent {
     });
   };
 
-  handleClick = () => {
+  handleClick = status => {
     const { dispatch } = this.props;
     const { token } = this.state;
     dispatch({
       type: 'list/send',
       payload: {
         ...token,
+        shop_status: status,
       },
     });
   };
@@ -232,13 +233,6 @@ class FilterCardList extends PureComponent {
                   </Col>
                   <Col lg={8} md={10} sm={10} xs={24}>
                     <FormItem {...formItemLayout}>
-                      <Button type="primary" onClick={this.handleClick}>
-                        自动发放卡券
-                      </Button>
-                    </FormItem>
-                  </Col>
-                  <Col lg={8} md={10} sm={10} xs={24}>
-                    <FormItem {...formItemLayout}>
                       <Button type="primary" onClick={this.handleExport}>
                         {showExport ? (
                           <CSVLink
@@ -251,6 +245,82 @@ class FilterCardList extends PureComponent {
                         ) : (
                           '导出成 Excel'
                         )}
+                      </Button>
+                    </FormItem>
+                  </Col>
+                </Row>
+              </StandardFormRow>
+              <StandardFormRow title="发放卡券" grid last style={{ marginTop: 20 }}>
+                <Row gutter={5} style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Col>
+                    <FormItem {...formItemLayout}>
+                      <Button
+                        type="primary"
+                        onClick={() => {
+                          this.handleClick(1);
+                        }}
+                      >
+                        标准网店
+                      </Button>
+                    </FormItem>
+                  </Col>
+                  <Col>
+                    <FormItem {...formItemLayout}>
+                      <Button
+                        type="primary"
+                        onClick={() => {
+                          this.handleClick(0);
+                        }}
+                      >
+                        黄色风暴
+                      </Button>
+                    </FormItem>
+                  </Col>
+                  <Col>
+                    <FormItem {...formItemLayout}>
+                      <Button
+                        type="primary"
+                        onClick={() => {
+                          this.handleClick(2);
+                        }}
+                      >
+                        万元户黄色风暴
+                      </Button>
+                    </FormItem>
+                  </Col>
+                  <Col>
+                    <FormItem {...formItemLayout}>
+                      <Button
+                        type="primary"
+                        onClick={() => {
+                          this.handleClick(3);
+                        }}
+                      >
+                        银牌合作伙伴
+                      </Button>
+                    </FormItem>
+                  </Col>
+                  <Col>
+                    <FormItem {...formItemLayout}>
+                      <Button
+                        type="primary"
+                        onClick={() => {
+                          this.handleClick(4);
+                        }}
+                      >
+                        金牌合作伙伴
+                      </Button>
+                    </FormItem>
+                  </Col>
+                  <Col>
+                    <FormItem {...formItemLayout}>
+                      <Button
+                        type="primary"
+                        onClick={() => {
+                          this.handleClick(5);
+                        }}
+                      >
+                        战略联盟合作伙伴
                       </Button>
                     </FormItem>
                   </Col>
