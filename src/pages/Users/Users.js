@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import numeral from 'numeral';
 import { connect } from 'dva';
-import { Row, Col, Form, Card, Select, Avatar, List, Input, Icon, Button } from 'antd';
+import { Row, Col, Form, Card, Select, Avatar, List, Input, Icon, Button, Modal } from 'antd';
 import StandardFormRow from '@/components/StandardFormRow';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import Link from 'umi/link';
@@ -104,14 +104,22 @@ class FilterCardList extends PureComponent {
     });
   };
 
-  handleClick = status => {
+  handleClick = (status, name) => {
     const { dispatch } = this.props;
     const { token } = this.state;
-    dispatch({
-      type: 'list/send',
-      payload: {
-        ...token,
-        shop_status: status,
+    Modal.confirm({
+      title: '确认发放卡券',
+      content: `确认为${name}客户发放卡券？`,
+      cancelText: '取消',
+      okText: '确认',
+      onOk: () => {
+        dispatch({
+          type: 'list/send',
+          payload: {
+            ...token,
+            shop_status: status,
+          },
+        });
       },
     });
   };
@@ -209,6 +217,52 @@ class FilterCardList extends PureComponent {
       { label: '本月完成任务', key: 'task_times' },
     ];
 
+    const confirmBtn = [
+      {
+        key: 'normal',
+        name: '标准网点',
+        value: 1,
+      },
+      {
+        key: 'yello',
+        name: '黄色风暴',
+        value: 0,
+      },
+      {
+        key: 'thousand',
+        name: '万元户黄色风暴网店',
+        value: 2,
+      },
+      {
+        key: 'silver',
+        name: '银牌合作伙伴',
+        value: 3,
+      },
+      {
+        key: 'golden',
+        name: '金牌合作伙伴',
+        value: 4,
+      },
+      {
+        key: 'partner',
+        name: '战略联盟合作伙伴',
+        value: 5,
+      },
+    ].map(val => (
+      <Col key={val.key}>
+        <FormItem {...formItemLayout}>
+          <Button
+            type="primary"
+            onClick={() => {
+              this.handleClick(val.value, val.name);
+            }}
+          >
+            {val.name}
+          </Button>
+        </FormItem>
+      </Col>
+    ));
+
     const { status } = this.state;
     return (
       <PageHeaderWrapper title="搜索列表" content={mainSearch} onTabChange={this.handleTabChange}>
@@ -252,78 +306,7 @@ class FilterCardList extends PureComponent {
               </StandardFormRow>
               <StandardFormRow title="发放卡券" grid last style={{ marginTop: 20 }}>
                 <Row gutter={5} style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Col>
-                    <FormItem {...formItemLayout}>
-                      <Button
-                        type="primary"
-                        onClick={() => {
-                          this.handleClick(1);
-                        }}
-                      >
-                        标准网店
-                      </Button>
-                    </FormItem>
-                  </Col>
-                  <Col>
-                    <FormItem {...formItemLayout}>
-                      <Button
-                        type="primary"
-                        onClick={() => {
-                          this.handleClick(0);
-                        }}
-                      >
-                        黄色风暴
-                      </Button>
-                    </FormItem>
-                  </Col>
-                  <Col>
-                    <FormItem {...formItemLayout}>
-                      <Button
-                        type="primary"
-                        onClick={() => {
-                          this.handleClick(2);
-                        }}
-                      >
-                        万元户黄色风暴
-                      </Button>
-                    </FormItem>
-                  </Col>
-                  <Col>
-                    <FormItem {...formItemLayout}>
-                      <Button
-                        type="primary"
-                        onClick={() => {
-                          this.handleClick(3);
-                        }}
-                      >
-                        银牌合作伙伴
-                      </Button>
-                    </FormItem>
-                  </Col>
-                  <Col>
-                    <FormItem {...formItemLayout}>
-                      <Button
-                        type="primary"
-                        onClick={() => {
-                          this.handleClick(4);
-                        }}
-                      >
-                        金牌合作伙伴
-                      </Button>
-                    </FormItem>
-                  </Col>
-                  <Col>
-                    <FormItem {...formItemLayout}>
-                      <Button
-                        type="primary"
-                        onClick={() => {
-                          this.handleClick(5);
-                        }}
-                      >
-                        战略联盟合作伙伴
-                      </Button>
-                    </FormItem>
-                  </Col>
+                  {confirmBtn}
                 </Row>
               </StandardFormRow>
             </Form>
