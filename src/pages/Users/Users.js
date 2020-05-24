@@ -108,7 +108,7 @@ class FilterCardList extends PureComponent {
     const { dispatch } = this.props;
     const { token } = this.state;
     Modal.confirm({
-      title: '确认发放卡券',
+      title: '发放卡券',
       content: `确认为${name}客户发放卡券？`,
       cancelText: '取消',
       okText: '确认',
@@ -118,6 +118,26 @@ class FilterCardList extends PureComponent {
           payload: {
             ...token,
             shop_status: status,
+          },
+        });
+      },
+    });
+  };
+
+  handleRest = () => {
+    const { dispatch } = this.props;
+    const { token } = this.state;
+    Modal.confirm({
+      title: '清理卡券',
+      content: `确认清理所有用户卡券？`,
+      cancelText: '取消',
+      okText: '确认',
+      okType: 'danger',
+      onOk: () => {
+        dispatch({
+          type: 'list/reset',
+          payload: {
+            ...token,
           },
         });
       },
@@ -299,6 +319,13 @@ class FilterCardList extends PureComponent {
                         ) : (
                           '导出成 Excel'
                         )}
+                      </Button>
+                    </FormItem>
+                  </Col>
+                  <Col lg={8} md={10} sm={10} xs={24}>
+                    <FormItem {...formItemLayout}>
+                      <Button type="danger" onClick={this.handleRest}>
+                        清理卡券
                       </Button>
                     </FormItem>
                   </Col>

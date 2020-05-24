@@ -7,6 +7,7 @@ import {
   findUsers,
   filterUsers,
   sendCard,
+  resetCard,
 } from '@/services/api';
 
 import { message } from 'antd';
@@ -80,6 +81,12 @@ export default {
       const response = yield call(sendCard, payload);
       if (response.code === 0) {
         message.success('自动发券成功');
+      }
+    },
+    *reset({ payload }, { call }) {
+      const response = yield call(resetCard, payload);
+      if (response.code === 0) {
+        message.success('清理卡券成功');
       }
     },
   },

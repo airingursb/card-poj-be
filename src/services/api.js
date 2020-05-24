@@ -326,6 +326,14 @@ export async function sendCard(params) {
   });
 }
 
+// 清理卡券
+export async function resetCard(params) {
+  return request(`${HOST}/admin/reset`, {
+    method: 'POST',
+    body: params,
+  });
+}
+
 // 获取卡券
 export async function getTicket(params) {
   return request(`${HOST}/admin/get_ticket`, {
