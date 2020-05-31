@@ -15,6 +15,8 @@ import {
   Divider,
   Icon,
   Select,
+  Switch,
+  Modal,
 } from 'antd';
 import DescriptionList from '@/components/DescriptionList';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
@@ -114,6 +116,48 @@ class AdvancedProfile extends Component {
           },
         });
       }
+    });
+  };
+
+  handleFulfil = fulfil => {
+    const { dispatch, users, location } = this.props;
+    const { token } = this.state;
+
+    if (fulfil === !!users.is_fulfil) return;
+
+    dispatch({
+      type: 'users/fulfil',
+      payload: {
+        ...token,
+        user_id: location.query.id,
+        is_fulfil: fulfil,
+      },
+    });
+  };
+
+  handleDel = () => {
+    const { dispatch, location, history } = this.props;
+    const { token } = this.state;
+
+    Modal.confirm({
+      title: '删除该用户',
+      content: `确认该用户？`,
+      cancelText: '取消',
+      okText: '确认',
+      okType: 'danger',
+      onOk: async () => {
+        await dispatch({
+          type: 'users/delUser',
+          payload: {
+            ...token,
+            user_id: location.query.id,
+          },
+        });
+
+        setTimeout(() => {
+          history.push('/users/list');
+        }, 1000);
+      },
     });
   };
 
@@ -313,6 +357,19 @@ class AdvancedProfile extends Component {
           {users.updated_at && users.updated_at.replace('T', ' ').replace('.000Z', '')}
         </Description>
         <Description term="本月卡券"> {cardStatus} </Description>
+        <Description term="回款状态">
+          <Switch
+            checkedChildren="已回款"
+            unCheckedChildren="未回款"
+            checked={!!users.is_fulfil}
+            onChange={this.handleFulfil}
+          />
+        </Description>
+        <Description>
+          <Button type="danger" onClick={this.handleDel}>
+            删除用户
+          </Button>
+        </Description>
       </DescriptionList>
     );
 

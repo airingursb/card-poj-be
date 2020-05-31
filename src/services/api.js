@@ -188,6 +188,30 @@ export async function updateShopStatus(params) {
   });
 }
 
+// 批量删除僵尸用户
+export async function deleteZombie(params) {
+  return request(`${HOST}/admin/delete_zombie`, {
+    method: 'POST',
+    body: params,
+  });
+}
+
+// 删除用户
+export async function deleteUser(params) {
+  return request(`${HOST}/admin/delete_user`, {
+    method: 'POST',
+    body: params,
+  });
+}
+
+// 修改用户回款状态
+export async function setFulfil(params) {
+  return request(`${HOST}/admin/set_fulfil`, {
+    method: 'POST',
+    body: params,
+  });
+}
+
 /**
  * 任务管理模块
  */

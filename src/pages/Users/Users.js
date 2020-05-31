@@ -144,6 +144,37 @@ class FilterCardList extends PureComponent {
     });
   };
 
+  handleDel = () => {
+    const { dispatch } = this.props;
+    const { token } = this.state;
+
+    Modal.confirm({
+      title: '删除僵尸用户',
+      content: `确认所有僵尸用户？`,
+      cancelText: '取消',
+      okText: '确认',
+      okType: 'danger',
+      onOk: async () => {
+        await dispatch({
+          type: 'users/delAll',
+          payload: {
+            ...token,
+          },
+        });
+
+        await dispatch({
+          type: 'list/users',
+          payload: {
+            ...token,
+            pageIndex: 0,
+            pageSize: 52,
+            status: -1,
+          },
+        });
+      },
+    });
+  };
+
   render() {
     const {
       list: { list },
@@ -290,7 +321,7 @@ class FilterCardList extends PureComponent {
           <Card bordered={false}>
             <Form layout="inline">
               <StandardFormRow title="筛选" grid last>
-                <Row gutter={16}>
+                <Row gutter={5} style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Col lg={8} md={10} sm={10} xs={24}>
                     <FormItem {...formItemLayout} label="用户类型">
                       {getFieldDecorator('status', {})(
@@ -305,7 +336,7 @@ class FilterCardList extends PureComponent {
                       )}
                     </FormItem>
                   </Col>
-                  <Col lg={8} md={10} sm={10} xs={24}>
+                  <Col>
                     <FormItem {...formItemLayout}>
                       <Button type="primary" onClick={this.handleExport}>
                         {showExport ? (
@@ -322,10 +353,17 @@ class FilterCardList extends PureComponent {
                       </Button>
                     </FormItem>
                   </Col>
-                  <Col lg={8} md={10} sm={10} xs={24}>
+                  <Col>
                     <FormItem {...formItemLayout}>
                       <Button type="danger" onClick={this.handleRest}>
                         清理卡券
+                      </Button>
+                    </FormItem>
+                  </Col>
+                  <Col>
+                    <FormItem {...formItemLayout}>
+                      <Button type="danger" onClick={this.handleDel}>
+                        删除僵尸用户
                       </Button>
                     </FormItem>
                   </Col>

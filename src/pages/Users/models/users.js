@@ -1,4 +1,11 @@
-import { checkUser, getUser, updateShopStatus } from '@/services/api';
+import {
+  checkUser,
+  getUser,
+  updateShopStatus,
+  deleteZombie,
+  deleteUser,
+  setFulfil,
+} from '@/services/api';
 import { message } from 'antd';
 
 export default {
@@ -42,6 +49,30 @@ export default {
             tasks: response.data.tasks,
           },
         });
+      }
+    },
+    *delAll({ payload }, { call }) {
+      const response = yield call(deleteZombie, payload);
+      if (response.code === 0) {
+        message.success('删除僵尸用户成功');
+      }
+    },
+    *delUser({ payload }, { call }) {
+      const response = yield call(deleteUser, payload);
+      if (response.code === 0) {
+        message.success('删除用户成功');
+      }
+    },
+    *fulfil({ payload }, { call, put }) {
+      const response = yield call(setFulfil, payload);
+      if (response.code === 0) {
+        yield put({
+          type: 'update',
+          payload: {
+            user: response.data,
+          },
+        });
+        message.success('修改用户回款状态成功');
       }
     },
   },
