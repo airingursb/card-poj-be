@@ -282,22 +282,22 @@ class FilterCardList extends PureComponent {
       {
         key: 'thousand',
         name: '万元户黄色风暴网店',
-        value: 2,
+        value: 3,
       },
       {
         key: 'silver',
         name: '银牌合作伙伴',
-        value: 3,
+        value: 4,
       },
       {
         key: 'golden',
         name: '金牌合作伙伴',
-        value: 4,
+        value: 5,
       },
       {
         key: 'partner',
         name: '战略联盟合作伙伴',
-        value: 5,
+        value: 6,
       },
     ].map(val => (
       <Col key={val.key}>
