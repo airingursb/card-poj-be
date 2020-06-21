@@ -1,7 +1,20 @@
 import React, { PureComponent } from 'react';
 import numeral from 'numeral';
 import { connect } from 'dva';
-import { Row, Col, Form, Card, Select, Avatar, List, Input, Icon, Button, Modal } from 'antd';
+import {
+  Row,
+  Col,
+  Form,
+  Card,
+  Select,
+  Avatar,
+  List,
+  Input,
+  Icon,
+  Button,
+  Modal,
+  message,
+} from 'antd';
 import StandardFormRow from '@/components/StandardFormRow';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import Link from 'umi/link';
@@ -18,6 +31,7 @@ const FormItem = Form.Item;
 @connect(({ list, loading }) => ({
   list,
   loading: loading.models.list,
+  codeLoading: loading.effects['users/code'],
 }))
 @Form.create({
   onValuesChange({ dispatch }, changedValues, allValues) {
@@ -48,6 +62,12 @@ class FilterCardList extends PureComponent {
     showExport: false,
     total: 500,
     status: localStorage.getItem('user-status') || -1,
+    second: '',
+    code: '',
+    phone: '',
+    ts: '',
+    delConfirm: false,
+    resetConfirm: false,
   };
 
   componentDidMount() {
@@ -124,55 +144,96 @@ class FilterCardList extends PureComponent {
     });
   };
 
-  handleRest = () => {
+  handleRest = async () => {
     const { dispatch } = this.props;
-    const { token } = this.state;
-    Modal.confirm({
-      title: '清理卡券',
-      content: `确认清理所有用户卡券？`,
-      cancelText: '取消',
-      okText: '确认',
-      okType: 'danger',
-      onOk: () => {
-        dispatch({
-          type: 'list/reset',
-          payload: {
-            ...token,
-          },
-        });
+    const { token, phone, code, ts } = this.state;
+
+    if (!phone || !code || !ts) {
+      message.error('请填写管理员手机号码和验证码');
+      return;
+    }
+
+    await dispatch({
+      type: 'list/reset',
+      payload: {
+        ...token,
+        phone,
+        code,
+        ts,
       },
     });
   };
 
-  handleDel = () => {
+  handleDel = async () => {
     const { dispatch } = this.props;
-    const { token } = this.state;
+    const { token, phone, code, ts } = this.state;
 
-    Modal.confirm({
-      title: '删除僵尸用户',
-      content: `确认所有僵尸用户？`,
-      cancelText: '取消',
-      okText: '确认',
-      okType: 'danger',
-      onOk: async () => {
-        await dispatch({
-          type: 'users/delAll',
-          payload: {
-            ...token,
-          },
-        });
+    if (!phone || !code || !ts) {
+      message.error('请填写管理员手机号码和验证码');
+      return;
+    }
 
-        await dispatch({
-          type: 'list/users',
-          payload: {
-            ...token,
-            pageIndex: 0,
-            pageSize: 52,
-            status: -1,
-          },
-        });
+    const delRes = await dispatch({
+      type: 'users/delAll',
+      payload: {
+        phone,
+        code,
+        ts,
+        ...token,
       },
     });
+
+    if (!delRes) return;
+
+    await dispatch({
+      type: 'list/users',
+      payload: {
+        ...token,
+        pageIndex: 0,
+        pageSize: 52,
+        status: -1,
+      },
+    });
+  };
+
+  getConfirmCode = async () => {
+    let { second } = this.state;
+    const { phone } = this.state;
+    if (second || !phone) return;
+
+    const { token } = this.state;
+    const { dispatch } = this.props;
+
+    const codeRes = await dispatch({
+      type: 'users/code',
+      payload: {
+        account: phone,
+        ...token,
+      },
+    });
+
+    if (!codeRes) return;
+
+    this.setState({
+      ts: codeRes.data.ts,
+    });
+
+    second = 60;
+    this.setState({
+      second,
+    });
+    const secondInterval = setInterval(() => {
+      second -= 1;
+
+      if (second === -1) {
+        clearInterval(secondInterval);
+        second = '';
+      }
+
+      this.setState({
+        second,
+      });
+    }, 1000);
   };
 
   render() {
@@ -314,7 +375,8 @@ class FilterCardList extends PureComponent {
       </Col>
     ));
 
-    const { status } = this.state;
+    const { status, second, delConfirm, resetConfirm, code, phone } = this.state;
+    const { codeLoading } = this.props;
     return (
       <PageHeaderWrapper title="搜索列表" content={mainSearch} onTabChange={this.handleTabChange}>
         <div className={styles.filterCardList}>
@@ -355,14 +417,28 @@ class FilterCardList extends PureComponent {
                   </Col>
                   <Col>
                     <FormItem {...formItemLayout}>
-                      <Button type="danger" onClick={this.handleRest}>
+                      <Button
+                        type="danger"
+                        onClick={() => {
+                          this.setState({
+                            resetConfirm: true,
+                          });
+                        }}
+                      >
                         清理卡券
                       </Button>
                     </FormItem>
                   </Col>
                   <Col>
                     <FormItem {...formItemLayout}>
-                      <Button type="danger" onClick={this.handleDel}>
+                      <Button
+                        type="danger"
+                        onClick={() => {
+                          this.setState({
+                            delConfirm: true,
+                          });
+                        }}
+                      >
                         删除僵尸用户
                       </Button>
                     </FormItem>
@@ -416,6 +492,62 @@ class FilterCardList extends PureComponent {
               </Link>
             )}
           />
+          <Modal
+            title="删除僵尸用户"
+            cancelText="取消"
+            okText="确认"
+            okType="danger"
+            visible={delConfirm || resetConfirm}
+            onCancel={() => {
+              this.setState({
+                resetConfirm: false,
+                delConfirm: false,
+              });
+            }}
+            onOk={() => {
+              // eslint-disable-next-line no-unused-expressions
+              delConfirm && !resetConfirm && this.handleDel();
+              // eslint-disable-next-line no-unused-expressions
+              resetConfirm && !delConfirm && this.handleRest();
+            }}
+          >
+            <Row align="middle" gutter={[8, 16]} justify="space-between">
+              <Col span={24}>
+                <Input
+                  placeholder="输入手机号码"
+                  value={phone}
+                  onChange={e => {
+                    this.setState({
+                      phone: e.target.value,
+                    });
+                  }}
+                />
+              </Col>
+            </Row>
+            <Row align="middle" gutter={[8, 16]} justify="space-between">
+              <Col span={18}>
+                <Input
+                  placeholder="输入验证码"
+                  value={code}
+                  onChange={e => {
+                    this.setState({
+                      code: e.target.value,
+                    });
+                  }}
+                />
+              </Col>
+              <Col span={6}>
+                <Button
+                  type="primary"
+                  disabled={second !== ''}
+                  loading={codeLoading}
+                  onClick={this.getConfirmCode}
+                >
+                  {second ? `${second}S` : '获取验证码'}
+                </Button>
+              </Col>
+            </Row>
+          </Modal>
         </div>
       </PageHeaderWrapper>
     );

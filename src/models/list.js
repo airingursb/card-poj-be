@@ -87,7 +87,10 @@ export default {
       const response = yield call(resetCard, payload);
       if (response.code === 0) {
         message.success('清理卡券成功');
+        return true;
       }
+      message.error(response.message || '清理卡券失败');
+      return false;
     },
   },
 

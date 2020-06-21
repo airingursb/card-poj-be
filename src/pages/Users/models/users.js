@@ -1,4 +1,5 @@
 import {
+  getCode,
   checkUser,
   getUser,
   updateShopStatus,
@@ -55,7 +56,10 @@ export default {
       const response = yield call(deleteZombie, payload);
       if (response.code === 0) {
         message.success('删除僵尸用户成功');
+        return true;
       }
+      message.error(response.message || '删除僵尸用户失败');
+      return false;
     },
     *delUser({ payload }, { call }) {
       const response = yield call(deleteUser, payload);
@@ -74,6 +78,16 @@ export default {
         });
         message.success('修改用户回款状态成功');
       }
+    },
+    *code({ payload }, { call }) {
+      const response = yield call(getCode, payload);
+      if (response.code === 0) {
+        message.success('获取验证码成功');
+        return response;
+      }
+
+      message.error('获取验证码失败');
+      return false;
     },
   },
 
