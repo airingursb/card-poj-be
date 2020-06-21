@@ -493,7 +493,7 @@ class FilterCardList extends PureComponent {
             )}
           />
           <Modal
-            title="删除僵尸用户"
+            title={delConfirm ? '确认删除僵尸用户' : '确认清理卡券'}
             cancelText="取消"
             okText="确认"
             okType="danger"
